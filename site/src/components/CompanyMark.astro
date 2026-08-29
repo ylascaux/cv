@@ -1,0 +1,45 @@
+---
+interface Props {
+  id: string;
+  organization: string;
+}
+
+const logos: Record<string, string> = {
+  openclassrooms: '/logos/companies/openclassrooms.png',
+  vif: '/logos/companies/vif-current.svg',
+  'oceanet-technology': '/logos/companies/oceanet-technology.png',
+  qosenergy: '/logos/companies/qosenergy-2020.png',
+  'sii-orange': '/logos/companies/sii-2014.png',
+  'sii-orange-business-services': '/logos/companies/sii-2014.png',
+  'gfi-oxylane': '/logos/companies/gfi-2011-mark.png',
+  'gfi-nagios': '/logos/companies/gfi-2011-mark.png',
+  'gfi-operations': '/logos/companies/gfi-2011-mark.png',
+};
+
+const marks: Record<string, string> = {
+  openclassrooms: 'OC',
+  vif: 'VIF',
+  'oceanet-technology': 'OT',
+  qosenergy: 'QOS',
+  'sii-orange': 'SII',
+  'sii-orange-business-services': 'SII',
+  'gfi-oxylane': 'GFI',
+  'gfi-nagios': 'GFI',
+  'gfi-operations': 'GFI',
+};
+
+const { id, organization } = Astro.props;
+const fallback = organization
+  .split(/\s|-/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((part) => part[0])
+  .join('')
+  .toUpperCase();
+const mark = marks[id] ?? fallback;
+const logo = logos[id];
+---
+
+<span class="company-mark" aria-hidden="true" data-company={id} data-has-logo={logo ? 'true' : undefined}>
+  {logo ? <img src={logo} alt="" width="128" height="128" /> : <span>{mark}</span>}
+</span>

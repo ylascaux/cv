@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CompanyMark from './CompanyMark.astro';
+import Icon from './Icon.astro';
 import { formatPeriod, translations } from '../lib/i18n';
 import type { Cv, Education, Link, TimedEntry } from '../lib/types';
 
@@ -23,6 +25,7 @@ const structuredData = {
   name: cv.profile.name,
   jobTitle: cv.profile.title,
   address: cv.profile.location,
+  email: cv.profile.email,
   sameAs: cv.profile.links.map(({ url }: Link) => url),
 };
 ---
@@ -32,10 +35,60 @@ const structuredData = {
 
   <header class="site-header">
     <div class="header-inner">
-      <a class="identity" href={homeHref} aria-label={cv.profile.name}>
-        <span class="profile-name">{cv.profile.name}</span>
-      </a>
-      <h1 id="page-title">{cv.profile.title}</h1>
+      <div class="header-top">
+        <div class="header-title">
+          <a class="identity" href={homeHref} aria-label={cv.profile.name}>
+            <span class="profile-name">{cv.profile.name}</span>
+          </a>
+          <h1 id="page-title">{cv.profile.title}</h1>
+        </div>
+        <ul class="header-details" aria-label={locale === 'fr' ? 'Informations personnelles' : 'Personal details'}>
+          <li>
+            <svg class="detail-icon" aria-hidden="true" viewBox="0 0 24 24"
+              ><path
+                d="M9 6V4h6v2h5a2 2 0 0 1 2 2v3H2V8a2 2 0 0 1 2-2h5Zm13 7v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5h8v1h4v-1h8Z"
+              ></path></svg
+            >
+            {cv.profile.status}
+          </li>
+          <li>
+            <svg class="detail-icon" aria-hidden="true" viewBox="0 0 24 24"
+              ><path
+                d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7Zm0 4.5A2.5 2.5 0 1 0 12 11a2.5 2.5 0 0 0 0-5Z"
+              ></path></svg
+            >
+            {cv.profile.location}
+          </li>
+          <li>
+            <svg class="detail-icon" aria-hidden="true" viewBox="0 0 24 24"
+              ><path
+                d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 4v2h7V8H6Zm0 5v2h4v-2H6Zm10-5v7h2V8h-2Z"
+              ></path></svg
+            >
+            {cv.profile.driverLicense}
+          </li>
+          {
+            cv.profile.links.map((link: Link) => (
+              <li>
+                <Icon class="detail-icon" name={link.label.toLowerCase() === 'linkedin' ? 'linkedin' : 'link'} />
+                <a href={link.url} target="_blank" rel="noreferrer">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="contact-item">
+            <a class="contact-button" href={`mailto:${cv.profile.email}`}>
+              <svg class="detail-icon" aria-hidden="true" viewBox="0 0 24 24"
+                ><path
+                  d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm9 7.2L20 7H4l8 5.2ZM3 9v8h18V9l-9 5.8L3 9Z"
+                ></path></svg
+              >
+              {t.contact}
+            </a>
+          </li>
+        </ul>
+      </div>
       <nav aria-label={locale === 'fr' ? 'Navigation principale' : 'Main navigation'}>
         <a href="#profile">{t.about}</a>
         <a href="#experience">{t.experience}</a>
@@ -77,27 +130,6 @@ const structuredData = {
           <p class="profile-summary">{cv.profile.summary}</p>
         </section>
 
-        <section
-          class="sidebar-section contact-details"
-          aria-label={locale === 'fr' ? 'Informations personnelles' : 'Personal details'}
-        >
-          <p><span class="detail-icon" aria-hidden="true">●</span>{cv.profile.status}</p>
-          <p><span class="detail-icon" aria-hidden="true">◆</span>{cv.profile.location}</p>
-          <p><span class="detail-icon" aria-hidden="true">■</span>{cv.profile.driverLicense}</p>
-          {
-            cv.profile.links.map((link: Link) => (
-              <p>
-                <span class="detail-icon" aria-hidden="true">
-                  ↗
-                </span>
-                <a href={link.url} target="_blank" rel="noreferrer">
-                  {link.label}
-                </a>
-              </p>
-            ))
-          }
-        </section>
-
         <section id="languages" class="sidebar-section languages" aria-labelledby="languages-title">
           <h2 id="languages-title" class="sidebar-title">{t.languages}</h2>
           <dl>
@@ -120,17 +152,23 @@ const structuredData = {
       <div class="main-column">
         <section id="experience" class="section" aria-labelledby="experience-title">
           <div class="section-heading">
-            <span class="section-icon" aria-hidden="true">◆</span>
+            <Icon class="section-icon" name="briefcase" />
             <h2 id="experience-title">{t.experience}</h2>
           </div>
-          <div class="entries">
+          <div class="entries experience-entries">
             {
               cv.experiences.map((experience: TimedEntry) => (
-                <article class="entry">
+                <article class:list={['entry', 'experience-entry', { 'is-current': !experience.endDate }]}>
                   <header class="entry-header">
-                    <div>
-                      <h3>{experience.role}</h3>
-                      <p class="organization">{experience.organization}</p>
+                    <div class="entry-identity">
+                      <CompanyMark id={experience.id} organization={experience.organization} />
+                      <div>
+                        <div class="role-line">
+                          <h3>{experience.role}</h3>
+                          {!experience.endDate && <span class="current-role">{t.currentRole}</span>}
+                        </div>
+                        <p class="organization">{experience.organization}</p>
+                      </div>
                     </div>
                     <div class="entry-meta">
                       <time>{formatPeriod(experience.startDate, experience.endDate, locale)}</time>
@@ -142,6 +180,19 @@ const structuredData = {
                       <li>{highlight}</li>
                     ))}
                   </ul>
+                  {experience.environment && (
+                    <details class="experience-details">
+                      <summary>{t.moreDetails}</summary>
+                      <div class="experience-details-content">
+                        <p>{t.technicalEnvironment}</p>
+                        <ul class="environment-tags" aria-label={t.technicalEnvironment}>
+                          {experience.environment.map((technology: string) => (
+                            <li>{technology}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </details>
+                  )}
                 </article>
               ))
             }
@@ -150,7 +201,7 @@ const structuredData = {
 
         <section id="education" class="section" aria-labelledby="education-title">
           <div class="section-heading">
-            <span class="section-icon" aria-hidden="true">◆</span>
+            <Icon class="section-icon" name="education" />
             <h2 id="education-title">{t.education}</h2>
           </div>
           <div class="entries">
@@ -173,7 +224,7 @@ const structuredData = {
 
         <section id="volunteering" class="section" aria-labelledby="volunteering-title">
           <div class="section-heading">
-            <span class="section-icon" aria-hidden="true">◆</span>
+            <Icon class="section-icon" name="volunteering" />
             <h2 id="volunteering-title">{t.volunteering}</h2>
           </div>
           <div class="entries">
@@ -197,14 +248,17 @@ const structuredData = {
       <aside class="skills-sidebar" aria-label={t.skills}>
         <section id="skills" class="section" aria-labelledby="skills-title">
           <div class="section-heading">
-            <span class="section-icon" aria-hidden="true">◆</span>
+            <Icon class="section-icon" name="skills" />
             <h2 id="skills-title">{t.skills}</h2>
           </div>
           <div class="skill-groups">
             {
               cv.skills.map((group: SkillGroup) => (
                 <article class="skill-group">
-                  <h3>{group.name}</h3>
+                  <h3>
+                    <Icon class="skill-group-icon" name={group.id} />
+                    <span>{group.name}</span>
+                  </h3>
                   <ul>
                     {group.items.map((skill: Skill) => (
                       <li>

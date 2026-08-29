@@ -12,6 +12,7 @@ export interface TimedEntry {
   contract?: string;
   startDate: string;
   endDate: string | null;
+  environment?: string[];
   highlights: string[];
 }
 
@@ -36,6 +37,7 @@ export interface Cv {
     status: string;
     summary: string;
     driverLicense: string;
+    email: string;
     links: Link[];
   };
   experiences: TimedEntry[];

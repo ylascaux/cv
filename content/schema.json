@@ -18,7 +18,7 @@
     "profile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "title", "location", "status", "summary", "driverLicense", "links"],
+      "required": ["name", "title", "location", "status", "summary", "driverLicense", "email", "links"],
       "properties": {
         "name": { "$ref": "#/$defs/nonEmptyString" },
         "title": { "$ref": "#/$defs/nonEmptyString" },
@@ -26,6 +26,7 @@
         "status": { "$ref": "#/$defs/nonEmptyString" },
         "summary": { "$ref": "#/$defs/nonEmptyString" },
         "driverLicense": { "$ref": "#/$defs/nonEmptyString" },
+        "email": { "type": "string", "format": "email" },
         "links": {
           "type": "array",
           "minItems": 1,
@@ -138,6 +139,12 @@
         "contract": { "$ref": "#/$defs/nonEmptyString" },
         "startDate": { "$ref": "#/$defs/yearMonth" },
         "endDate": { "anyOf": [{ "$ref": "#/$defs/yearMonth" }, { "type": "null" }] },
+        "environment": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
         "highlights": { "$ref": "#/$defs/highlights" }
       }
     }

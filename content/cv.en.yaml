@@ -8,6 +8,7 @@ profile:
   location: Treillières (44119), France
   status: Employed — open to opportunities
   driverLicense: Driving licence
+  email: yoann-cv@lascaux.ovh
   summary: >-
     Senior Platform Engineer / SRE with over 15 years of experience in infrastructure,
     Cloud, automation and operating critical systems. Specialized in AWS, Kubernetes,
@@ -26,6 +27,28 @@ experiences:
     contract: Full-time
     startDate: 2024-05
     endDate: null
+    environment:
+      - AWS
+      - EKS
+      - Kubernetes
+      - Karpenter
+      - Terraform
+      - Terragrunt
+      - Helm
+      - GitHub Actions
+      - Datadog
+      - PostgreSQL / Aurora
+      - Redis
+      - CloudFront
+      - Cloudflare
+      - GCP
+      - Azure
+      - Azure OpenAI
+      - AWS Bedrock
+      - Python
+      - Go
+      - Bash
+      - Linux
     highlights:
       - Design and evolution of OpenClassrooms’ Cloud platform, with a cross-functional role covering architecture, industrialization, reliability, observability and Developer Experience.
       - Define and evolve technical standards for the AWS / EKS / Kubernetes platform.
@@ -48,6 +71,24 @@ experiences:
     organization: VIF
     startDate: 2020-04
     endDate: 2024-05
+    environment:
+      - AWS
+      - Terraform
+      - Ansible
+      - AWX
+      - Jenkins
+      - Python
+      - Bash
+      - Linux
+      - Red Hat
+      - Debian
+      - VMware vSphere
+      - Datadog
+      - Nagios
+      - Vault
+      - Git
+      - Bitbucket
+      - Nexus
     highlights:
       - Industrialized infrastructure and deployment processes, operated platforms and supported development teams.
       - Designed and automated infrastructure using Terraform and Ansible/AWX.
@@ -67,6 +108,13 @@ experiences:
     organization: Océanet Technology
     startDate: 2019-10
     endDate: 2020-04
+    environment:
+      - Linux
+      - AWS
+      - SaltStack
+      - Icinga2
+      - Python
+      - Bash
     highlights:
       - Automated server installation and configuration using SaltStack.
       - Led the implementation of a new monitoring solution.
@@ -80,6 +128,18 @@ experiences:
     organization: QosEnergy
     startDate: 2015-04
     endDate: 2019-10
+    environment:
+      - Linux
+      - Docker
+      - OpenStack / OVHcloud
+      - Ansible
+      - Python
+      - Bash
+      - Apache
+      - HAProxy
+      - MySQL
+      - RabbitMQ
+      - Git
     highlights:
       - Administered, architected and automated infrastructure composed of approximately 250 physical and Cloud servers.
       - Administered and operated Linux infrastructure.
@@ -97,6 +157,12 @@ experiences:
     organization: SII - Orange
     startDate: 2013-10
     endDate: 2015-04
+    environment:
+      - Linux
+      - Akamai
+      - Python
+      - Bash
+      - Dell and HP servers
     highlights:
       - Designed and deployed an Akamai CDN infrastructure.
       - Automated operations using Python and Bash.
@@ -108,6 +174,12 @@ experiences:
     organization: SII - Orange Business Services
     startDate: 2011-12
     endDate: 2013-09
+    environment:
+      - Linux
+      - Bash
+      - Apache
+      - PHP
+      - ProFTPD
     highlights:
       - Automated Cloud application deployments using Shell scripting.
       - Provided Level 3 Linux expertise and support.
@@ -119,6 +191,11 @@ experiences:
     organization: GFI - Oxylane
     startDate: 2011-02
     endDate: 2011-11
+    environment:
+      - Red Hat Linux
+      - Oracle Application Server
+      - Shell
+      - Python
     highlights:
       - Administered application and web servers.
       - Provided Level 2 technical support.

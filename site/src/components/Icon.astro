@@ -1,0 +1,38 @@
+---
+interface Props {
+  name: string;
+  class?: string;
+}
+
+const paths = {
+  briefcase: 'M9 6V4h6v2h5a2 2 0 0 1 2 2v3H2V8a2 2 0 0 1 2-2h5Zm13 7v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5h8v1h4v-1h8Z',
+  education: 'M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm-7 9.18V17l7 4 7-4v-4.82L12 16l-7-3.82Z',
+  volunteering: 'M12 21s-8.5-5.2-8.5-11.25A4.75 4.75 0 0 1 12 6.82a4.75 4.75 0 0 1 8.5 2.93C20.5 15.8 12 21 12 21Z',
+  skills: 'M4 3h2v18H4V3Zm14 0h2v18h-2V3Zm-7 0h2v18h-2V3ZM1 8h8v4H1V8Zm14 4h8v4h-8v-4ZM8 15h8v4H8v-4Z',
+  'platform-engineering':
+    'm12 2 9 5v10l-9 5-9-5V7l9-5Zm0 2.3L5 8.2v7.6l7 3.9 7-3.9V8.2l-7-3.9Zm-1 3.2h2v3.6l3.1 1.8-1 1.7-4.1-2.4V7.5Z',
+  cloud:
+    'M7.5 19A5.5 5.5 0 0 1 6 8.21 7 7 0 0 1 19.74 10 4.5 4.5 0 0 1 19.5 19h-12Zm0-2h12a2.5 2.5 0 0 0 .12-5A5 5 0 0 0 10 10.1l-.3 1.2-1.16-.65A3.5 3.5 0 1 0 7.5 17Z',
+  'infrastructure-as-code':
+    'M3 3h8v8H3V3Zm2 2v4h4V5H5Zm8-2h8v8h-8V3Zm2 2v4h4V5h-4ZM3 13h8v8H3v-8Zm2 2v4h4v-4H5Zm11-2h2v3h3v2h-3v3h-2v-3h-3v-2h3v-3Z',
+  'ci-cd':
+    'M17.65 6.35A8 8 0 0 0 4.26 10H1l4 4 4-4H6.27a6 6 0 0 1 10-2.24l1.38-1.41ZM19 10l-4 4h2.73a6 6 0 0 1-10 2.24l-1.38 1.41A8 8 0 0 0 19.74 14H23l-4-4Z',
+  'ai-llm':
+    'm12 2 1.4 4.6L18 8l-4.6 1.4L12 14l-1.4-4.6L6 8l4.6-1.4L12 2Zm6 10 .9 3.1L22 16l-3.1.9L18 20l-.9-3.1L14 16l3.1-.9L18 12ZM6 13l1.1 3.9L11 18l-3.9 1.1L6 23l-1.1-3.9L1 18l3.9-1.1L6 13Z',
+  'observability-sre': 'M3 3h2v16h16v2H3V3Zm4 12 3.5-4 3 2 4-6 1.7 1.1-5.1 7.6-3.3-2.2-2.3 2.7L7 15Z',
+  development:
+    'm8.7 16.6-1.4 1.4-6-6 6-6 1.4 1.4L4.1 12l4.6 4.6Zm6.6 0 4.6-4.6-4.6-4.6L16.7 6l6 6-6 6-1.4-1.4ZM13.9 4l-3.8 16H8l3.8-16h2.1Z',
+  'systems-networks':
+    'M4 3h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm0 2v5h16V5H4Zm0 8h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2Zm0 2v4h16v-4H4Zm2-9h2v2H6V6Zm0 10h2v2H6v-2Z',
+  linkedin:
+    'M6.5 8.5H3.2V21h3.3V8.5ZM4.85 3A1.93 1.93 0 1 0 4.85 6.86 1.93 1.93 0 0 0 4.85 3ZM21 13.83c0-3.77-2.01-5.52-4.7-5.52a4.08 4.08 0 0 0-3.68 2.02V8.5H9.3V21h3.32v-6.2c0-1.63.31-3.22 2.34-3.22 2 0 2.02 1.87 2.02 3.33V21H21v-7.17Z',
+  link: 'M10.6 13.4a2 2 0 0 0 2.8 0l4-4a2 2 0 0 0-2.8-2.8l-1.3 1.3-1.4-1.4 1.3-1.3a4 4 0 0 1 5.6 5.6l-4 4a4 4 0 0 1-5.6 0l-.7-.7 1.4-1.4.7.7Zm2.8-2.8a2 2 0 0 0-2.8 0l-4 4a2 2 0 1 0 2.8 2.8l1.3-1.3 1.4 1.4-1.3 1.3a4 4 0 0 1-5.6-5.6l4-4a4 4 0 0 1 5.6 0l.7.7-1.4 1.4-.7-.7Z',
+} as const;
+
+const { name, class: className } = Astro.props;
+const path = paths[name as keyof typeof paths] ?? paths.skills;
+---
+
+<svg class={className} aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+  <path d={path}></path>
+</svg>

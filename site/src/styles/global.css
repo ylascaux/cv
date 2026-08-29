@@ -94,8 +94,16 @@ a:focus-visible {
 }
 
 .site-header {
+  position: sticky;
+  z-index: 20;
+  top: 0;
   border-bottom: 1px solid #eeeeee;
   background: #ffffff;
+  box-shadow: 0 0.25rem 1rem rgb(51 51 51 / 8%);
+}
+
+section[id] {
+  scroll-margin-top: 10rem;
 }
 
 .header-inner,
@@ -106,7 +114,18 @@ footer {
 }
 
 .header-inner {
-  padding: 2.5rem 0 0;
+  padding: 0.9rem 0 0;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.header-title {
+  flex: 0 0 auto;
 }
 
 .identity {
@@ -121,18 +140,66 @@ footer {
 
 .profile-name {
   display: block;
-  font-size: clamp(2rem, 4vw, 3.15rem);
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
   font-weight: 300;
-  line-height: 1.15;
+  line-height: 1.1;
   letter-spacing: -0.035em;
 }
 
 h1 {
-  margin: 0.35rem 0 2rem;
+  margin: 0.15rem 0 0.75rem;
   color: var(--primary);
-  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
   font-weight: 300;
-  line-height: 1.3;
+  line-height: 1.25;
+}
+
+.header-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(12rem, 1fr));
+  gap: 0.35rem 1.25rem;
+  max-width: 42rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  list-style: none;
+}
+
+.header-details li {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.detail-icon {
+  flex: 0 0 auto;
+  width: 0.85rem;
+  height: 0.85rem;
+  color: var(--primary);
+  fill: currentColor;
+}
+
+.contact-item {
+  grid-column: 2;
+}
+
+.contact-button {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.contact-button:hover {
+  color: #ffffff;
+  background: var(--primary);
 }
 
 nav {
@@ -148,7 +215,7 @@ nav {
 
 nav a {
   flex: 0 0 auto;
-  padding: 0.7rem 0 0.85rem;
+  padding: 0.45rem 0 0.6rem;
   border-bottom: 3px solid transparent;
   color: var(--ink-soft);
   text-decoration: none;
@@ -211,23 +278,6 @@ nav .language-current {
   color: #555555;
   font-size: 0.88rem;
   line-height: 1.65;
-}
-
-.contact-details p {
-  display: grid;
-  grid-template-columns: 1.1rem minmax(0, 1fr);
-  gap: 0.55rem;
-  margin: 0.75rem 0;
-  overflow-wrap: anywhere;
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-}
-
-.detail-icon {
-  color: var(--primary);
-  font-size: 0.6rem;
-  line-height: 1.8;
-  text-align: center;
 }
 
 .languages dl {
@@ -303,8 +353,10 @@ nav .language-current {
 }
 
 .section-icon {
+  width: 1rem;
+  height: 1rem;
   color: var(--primary);
-  font-size: 0.72rem;
+  fill: currentColor;
 }
 
 .section-heading h2 {
@@ -324,6 +376,186 @@ nav .language-current {
 
 .entry {
   break-inside: avoid;
+}
+
+.experience-entries {
+  position: relative;
+}
+
+.experience-entries::before {
+  position: absolute;
+  top: 1.2rem;
+  bottom: 1.2rem;
+  left: 1.15rem;
+  width: 1px;
+  background: var(--primary-pale);
+  content: '';
+}
+
+.experience-entry {
+  position: relative;
+}
+
+.entry-identity {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.company-mark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: 0 0 2.35rem;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #ddd4ef;
+  border-radius: 0.55rem;
+  color: var(--primary);
+  background: var(--paper);
+  box-shadow: 0 0.2rem 0.65rem rgb(51 51 51 / 7%);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.company-mark[data-company='openclassrooms']:not([data-has-logo]) {
+  border-color: var(--primary);
+  color: #ffffff;
+  background: var(--primary);
+}
+
+.company-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.company-mark[data-company='vif'] {
+  border-color: #263943;
+  background: #263943;
+}
+
+.company-mark[data-company='vif'] img {
+  padding: 0.2rem;
+  object-fit: contain;
+}
+
+.company-mark[data-company='oceanet-technology'] img {
+  padding: 0.05rem;
+  object-fit: contain;
+  transform: scale(1.18);
+}
+
+.company-mark[data-company='qosenergy'] img {
+  padding: 0.2rem;
+  object-fit: contain;
+}
+
+.company-mark[data-company^='sii'] img,
+.company-mark[data-company^='gfi'] img {
+  padding: 0.18rem;
+  object-fit: contain;
+}
+
+.role-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  align-items: center;
+}
+
+.current-role {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.16rem 0.45rem;
+  border-radius: 999px;
+  color: var(--primary);
+  background: var(--primary-pale);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.experience-entry > .highlights {
+  margin-left: 3.2rem;
+}
+
+.experience-details {
+  margin: 0.85rem 0 0 3.2rem;
+  border-top: 1px solid var(--primary-pale);
+}
+
+.experience-details summary {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  width: fit-content;
+  padding-top: 0.65rem;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.experience-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.experience-details summary::after {
+  display: grid;
+  width: 1.1rem;
+  height: 1.1rem;
+  place-items: center;
+  border: 1px solid #d8cbed;
+  border-radius: 50%;
+  content: '+';
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.experience-details[open] summary::after {
+  content: '−';
+}
+
+.experience-details-content {
+  padding: 0.8rem 0 0.15rem;
+}
+
+.experience-details-content > p {
+  margin: 0 0 0.55rem;
+  color: #555555;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.environment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.environment-tags li {
+  padding: 0.22rem 0.5rem;
+  border: 1px solid #e3daf2;
+  border-radius: 0.35rem;
+  color: #555555;
+  background: #fcfbfe;
+  font-size: 0.72rem;
+  line-height: 1.3;
 }
 
 .entry-header {
@@ -352,6 +584,12 @@ h3 {
   color: var(--ink-soft);
   font-size: 0.76rem;
   text-align: right;
+}
+
+.entry-meta time {
+  display: block;
+  color: #555555;
+  font-weight: 600;
 }
 
 .entry-meta span {
@@ -393,8 +631,18 @@ h3 {
 }
 
 .skill-group h3 {
-  padding-bottom: 0.45rem;
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--primary-pale);
+}
+
+.skill-group-icon {
+  flex: 0 0 auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: currentColor;
 }
 
 .skill-group ul {
@@ -446,11 +694,23 @@ footer p {
 
 @media (max-width: 800px) {
   .header-inner {
-    padding-top: 1.8rem;
+    padding-top: 0.75rem;
   }
 
-  nav > a {
-    display: none;
+  .header-top {
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-details {
+    grid-template-columns: repeat(2, minmax(10rem, 1fr));
+    max-width: 31rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.68rem;
+  }
+
+  section[id] {
+    scroll-margin-top: 10rem;
   }
 
   .resume-layout {
@@ -493,17 +753,35 @@ footer p {
     padding-inline: 1.25rem;
   }
 
+  .header-top {
+    display: block;
+  }
+
   .profile-name {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   h1 {
-    margin-bottom: 1.35rem;
-    font-size: 1.15rem;
+    margin: 0.1rem 0 0.55rem;
+    font-size: 0.95rem;
+  }
+
+  .header-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: start;
+    gap: 0.2rem 0.75rem;
+    max-width: none;
+    margin-bottom: 0.45rem;
+    font-size: 0.62rem;
+  }
+
+  section[id] {
+    scroll-margin-top: 12rem;
   }
 
   nav {
-    gap: 1rem;
+    gap: 0.85rem;
+    font-size: 0.65rem;
   }
 
   .entry-header {
@@ -512,7 +790,13 @@ footer p {
   }
 
   .entry-meta {
+    margin-left: 3.2rem;
     text-align: left;
+  }
+
+  .experience-entry > .highlights,
+  .experience-details {
+    margin-left: 0;
   }
 
   .skill-groups {
@@ -529,18 +813,24 @@ footer p {
 @media print {
   @page {
     size: A4;
-    margin: 6mm;
+    margin: 7mm;
   }
 
   body {
-    font-size: 7pt;
-    line-height: 1.28;
+    font-size: 7.6pt;
+    line-height: 1.38;
+  }
+
+  .site-header {
+    position: static;
+    box-shadow: none;
   }
 
   .skip-link,
   nav,
   footer,
-  .download-button {
+  .download-button,
+  .experience-details {
     display: none;
   }
 
@@ -554,12 +844,29 @@ footer p {
   }
 
   .profile-name {
-    font-size: 20pt;
+    font-size: 19pt;
   }
 
   h1 {
-    margin: 0.5mm 0 2.5mm;
-    font-size: 11pt;
+    margin: 0.5mm 0 2mm;
+    font-size: 10.5pt;
+  }
+
+  .header-details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1mm 3mm;
+    max-width: 135mm;
+    margin-bottom: 2mm;
+    font-size: 6.3pt;
+  }
+
+  .contact-item {
+    grid-column: auto;
+  }
+
+  .contact-button {
+    padding: 0;
+    border: 0;
   }
 
   .resume-layout {
@@ -570,7 +877,7 @@ footer p {
   }
 
   .sidebar {
-    padding: 11mm 4mm 5mm;
+    padding: 12mm 4.5mm 6mm;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
@@ -581,90 +888,131 @@ footer p {
   }
 
   .sidebar-section + .sidebar-section {
-    margin-top: 5mm;
+    margin-top: 6mm;
   }
 
   .sidebar-title {
-    margin-bottom: 2mm;
-    font-size: 8pt;
+    margin-bottom: 2.5mm;
+    font-size: 8.5pt;
   }
 
   .profile-summary {
-    font-size: 6.5pt;
-    line-height: 1.35;
-  }
-
-  .contact-details p {
-    margin: 1.2mm 0;
-    font-size: 6.3pt;
+    font-size: 7pt;
+    line-height: 1.45;
   }
 
   .languages dl div {
-    padding: 1.5mm 0;
+    padding: 2mm 0;
   }
 
   .languages dt {
-    font-size: 6.8pt;
+    font-size: 7.2pt;
   }
 
   .languages dd {
-    font-size: 6.2pt;
+    font-size: 6.7pt;
   }
 
   .main-column {
-    padding: 5mm 4mm 5mm 7mm;
+    padding: 6mm 4.5mm 6mm 7.5mm;
   }
 
   .skills-sidebar {
-    padding: 0 4mm 5mm 7mm;
+    padding: 0 4.5mm 6mm 7.5mm;
     border-left: 0;
     background: #ffffff;
   }
 
   .section + .section {
-    margin-top: 5mm;
+    margin-top: 6mm;
   }
 
   .section-heading {
-    gap: 1.5mm;
-    margin-bottom: 2.5mm;
+    gap: 1.8mm;
+    margin-bottom: 3.2mm;
   }
 
   .section-heading h2 {
-    font-size: 9.5pt;
+    font-size: 10pt;
   }
 
   .entries {
-    gap: 3mm;
+    gap: 4mm;
+  }
+
+  .experience-entries::before {
+    top: 3.5mm;
+    bottom: 3.5mm;
+    left: 3.5mm;
+  }
+
+  .entry-identity {
+    gap: 2mm;
+  }
+
+  .company-mark {
+    flex-basis: 7mm;
+    width: 7mm;
+    height: 7mm;
+    border-radius: 1.5mm;
+    box-shadow: none;
+    font-size: 5pt;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .company-mark[data-company='vif'] img,
+  .company-mark[data-company='qosenergy'] img {
+    padding: 0.5mm;
+  }
+
+  .company-mark[data-company='oceanet-technology'] img {
+    padding: 0.1mm;
+  }
+
+  .company-mark[data-company^='sii'] img,
+  .company-mark[data-company^='gfi'] img {
+    padding: 0.5mm;
+  }
+
+  .current-role {
+    padding: 0.4mm 1.2mm;
+    font-size: 4.8pt;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .experience-entry > .highlights {
+    margin-left: 9mm;
   }
 
   h3 {
-    font-size: 7.8pt;
+    font-size: 8.4pt;
   }
 
   .organization {
-    margin-top: 0.5mm;
-    font-size: 6.8pt;
+    margin-top: 0.8mm;
+    font-size: 7.2pt;
   }
 
   .entry-meta {
-    font-size: 5.8pt;
+    font-size: 6.2pt;
   }
 
   .highlights,
   .skill-group ul {
-    margin-top: 1.5mm;
-    padding-left: 3.5mm;
+    margin-top: 2mm;
+    padding-left: 3.8mm;
   }
 
   .highlights li,
   .skill-group li {
-    margin-block: 0.6mm;
+    margin-block: 0.9mm;
     padding-left: 0;
   }
 
   .education-entry > p {
-    margin-top: 1.5mm;
+    margin-top: 2mm;
   }
 
   .skill-group,
@@ -674,14 +1022,20 @@ footer p {
 
   .skill-groups {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3mm 5mm;
+    gap: 4mm 6mm;
   }
 
   .skill-group h3 {
-    padding-bottom: 1mm;
+    gap: 1.4mm;
+    padding-bottom: 1.3mm;
+  }
+
+  .skill-group-icon {
+    width: 3mm;
+    height: 3mm;
   }
 
   .skill-group ul {
-    font-size: 6.5pt;
+    font-size: 7pt;
   }
 }
