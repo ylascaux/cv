@@ -9,11 +9,10 @@
     "metadata": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["locale", "lastReviewed", "source"],
+      "required": ["locale", "lastReviewed"],
       "properties": {
         "locale": { "enum": ["fr", "en"] },
-        "lastReviewed": { "type": "string", "format": "date" },
-        "source": { "type": "string", "format": "uri" }
+        "lastReviewed": { "type": "string", "format": "date" }
       }
     },
     "profile": {

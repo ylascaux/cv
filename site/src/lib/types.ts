@@ -28,7 +28,6 @@ export interface Cv {
   metadata: {
     locale: Locale;
     lastReviewed: string;
-    source: string;
   };
   profile: {
     name: string;
