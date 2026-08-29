@@ -54,9 +54,10 @@ experiences:
       - Conception et évolution de la plateforme Cloud d’OpenClassrooms, avec un rôle transverse sur l’architecture, l’industrialisation, la fiabilité, l’observabilité et la Developer Experience.
       - Définition et évolution des standards techniques de la plateforme Cloud sur AWS / EKS / Kubernetes.
       - Pilotage de sujets d’architecture et d’industrialisation autour de Terraform, Terragrunt, Helm et GitHub Actions.
-      - Contribution aux choix d’architecture, aux arbitrages techniques et à la définition des bonnes pratiques Cloud, Kubernetes et SRE.
       - Pilotage de l’adoption de Datadog pour unifier monitoring, APM, alerting, observabilité et gestion des incidents.
       - Amélioration de la résilience de la plateforme via l’automatisation des sauvegardes, restaurations et scénarios de reprise après incident.
+    details:
+      - Contribution aux choix d’architecture, aux arbitrages techniques et à la définition des bonnes pratiques Cloud, Kubernetes et SRE.
       - Optimisation continue de la fiabilité, des performances et des coûts de l’infrastructure Cloud.
       - Industrialisation des opérations afin de réduire les tâches manuelles et d’améliorer la reproductibilité des environnements.
       - Accompagnement des équipes de développement sur les sujets infrastructure, observabilité, CI/CD et bonnes pratiques de production.
@@ -93,11 +94,12 @@ experiences:
     highlights:
       - Industrialisation des infrastructures et des processus de déploiement, exploitation des plateformes et accompagnement des équipes de développement.
       - Conception et automatisation des infrastructures avec Terraform et Ansible/AWX.
-      - Réduction des opérations manuelles grâce à l’automatisation.
       - Architecture et exploitation de plateformes VMware vSphere et AWS.
+      - Mise en place et exploitation des solutions de monitoring et d’observabilité.
+    details:
+      - Réduction des opérations manuelles grâce à l’automatisation.
       - Support technique de niveau 2 et 3.
       - Accompagnement des développeurs sur les problématiques d’infrastructure et de déploiement.
-      - Mise en place et exploitation des solutions de monitoring et d’observabilité.
       - Documentation des plateformes et procédures techniques.
       - Industrialisation des procédures d’installation et de déploiement.
       - Automatisation des opérations avec Python et Bash.
@@ -119,8 +121,9 @@ experiences:
     highlights:
       - Automatisation de l’installation et de la configuration des serveurs avec SaltStack.
       - Pilotage de la mise en place d’une nouvelle solution de supervision.
-      - Automatisation des tâches d’exploitation avec Python et Bash.
       - Montée en compétence et premières mises en œuvre autour de Kubernetes et AWS.
+    details:
+      - Automatisation des tâches d’exploitation avec Python et Bash.
       - Participation à l’évolution des infrastructures Cloud.
       - Amélioration des outils et processus utilisés par les équipes d’exploitation.
 
@@ -143,10 +146,11 @@ experiences:
       - Git
     highlights:
       - Administration, architecture et automatisation d’une infrastructure composée d’environ 250 serveurs physiques et Cloud.
-      - Administration et exploitation des infrastructures Linux.
-      - Architecture et évolution de la plateforme.
       - Automatisation de la configuration des serveurs avec Ansible.
       - Étude et déploiement de solutions Cloud.
+    details:
+      - Administration et exploitation des infrastructures Linux.
+      - Architecture et évolution de la plateforme.
       - Exploitation d’environnements Docker.
       - Gestion des incidents et participation aux astreintes.
       - Documentation des architectures et procédures.
@@ -166,9 +170,10 @@ experiences:
       - Serveurs Dell et HP
     highlights:
       - Étude et déploiement d’une infrastructure CDN Akamai.
+      - Administration et expertise Linux.
+    details:
       - Automatisation avec Python et Bash.
       - Documentation des architectures et procédures techniques.
-      - Administration et expertise Linux.
 
   - id: sii-orange-business-services
     role: Expert Technique
@@ -184,6 +189,7 @@ experiences:
     highlights:
       - Automatisation du déploiement d’applications Cloud avec Shell.
       - Expertise et support Linux de niveau 3.
+    details:
       - Administration de services Web.
       - Compilation et création de packages Linux.
 
@@ -199,8 +205,9 @@ experiences:
       - Python
     highlights:
       - Administration des serveurs applicatifs et Web.
-      - Support technique de niveau 2.
       - Automatisation de tâches d’exploitation.
+    details:
+      - Support technique de niveau 2.
 
   - id: gfi-nagios
     role: Expert Technique Nagios
@@ -209,8 +216,9 @@ experiences:
     endDate: 2011-01
     highlights:
       - Industrialisation des plateformes de supervision Nagios / Centreon.
-      - Automatisation avec Shell, Python et Perl.
       - Développement de scripts et plugins de supervision.
+    details:
+      - Automatisation avec Shell, Python et Perl.
 
   - id: gfi-operations
     role: Technicien d’exploitation

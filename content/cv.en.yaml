@@ -53,9 +53,10 @@ experiences:
       - Design and evolution of OpenClassrooms’ Cloud platform, with a cross-functional role covering architecture, industrialization, reliability, observability and Developer Experience.
       - Define and evolve technical standards for the AWS / EKS / Kubernetes platform.
       - Lead architecture and industrialization initiatives around Terraform, Terragrunt, Helm and GitHub Actions.
-      - Contribute to architecture decisions, technical trade-offs and Cloud, Kubernetes and SRE best practices.
       - Lead the adoption of Datadog to unify monitoring, APM, alerting, observability and incident management.
       - Improve platform resilience through automated backups, restores and disaster recovery scenarios.
+    details:
+      - Contribute to architecture decisions, technical trade-offs and Cloud, Kubernetes and SRE best practices.
       - Continuously optimize Cloud infrastructure reliability, performance and costs.
       - Industrialize infrastructure operations to reduce manual tasks and improve environment reproducibility.
       - Support development teams on infrastructure, observability, CI/CD and production best practices.
@@ -92,11 +93,12 @@ experiences:
     highlights:
       - Industrialized infrastructure and deployment processes, operated platforms and supported development teams.
       - Designed and automated infrastructure using Terraform and Ansible/AWX.
-      - Reduced manual operations through automation.
       - Designed and operated VMware vSphere and AWS platforms.
+      - Implemented and operated monitoring and observability solutions.
+    details:
+      - Reduced manual operations through automation.
       - Provided Level 2 and Level 3 technical support.
       - Supported developers with infrastructure and deployment topics.
-      - Implemented and operated monitoring and observability solutions.
       - Documented platforms and technical procedures.
       - Industrialized installation and deployment processes.
       - Automated operations using Python and Bash.
@@ -118,8 +120,9 @@ experiences:
     highlights:
       - Automated server installation and configuration using SaltStack.
       - Led the implementation of a new monitoring solution.
-      - Automated operational tasks using Python and Bash.
       - Started implementing and working with Kubernetes and AWS.
+    details:
+      - Automated operational tasks using Python and Bash.
       - Contributed to Cloud infrastructure evolution.
       - Improved tools and processes used by operations teams.
 
@@ -142,10 +145,11 @@ experiences:
       - Git
     highlights:
       - Administered, architected and automated infrastructure composed of approximately 250 physical and Cloud servers.
-      - Administered and operated Linux infrastructure.
-      - Contributed to platform architecture and evolution.
       - Automated server configuration with Ansible.
       - Evaluated and deployed Cloud solutions.
+    details:
+      - Administered and operated Linux infrastructure.
+      - Contributed to platform architecture and evolution.
       - Operated Docker environments.
       - Managed incidents and participated in on-call rotations.
       - Documented architectures and procedures.
@@ -165,9 +169,10 @@ experiences:
       - Dell and HP servers
     highlights:
       - Designed and deployed an Akamai CDN infrastructure.
+      - Provided Linux administration and technical expertise.
+    details:
       - Automated operations using Python and Bash.
       - Documented architectures and technical procedures.
-      - Provided Linux administration and technical expertise.
 
   - id: sii-orange-business-services
     role: Technical Expert
@@ -183,6 +188,7 @@ experiences:
     highlights:
       - Automated Cloud application deployments using Shell scripting.
       - Provided Level 3 Linux expertise and support.
+    details:
       - Administered web services.
       - Built and maintained Linux packages.
 
@@ -198,8 +204,9 @@ experiences:
       - Python
     highlights:
       - Administered application and web servers.
-      - Provided Level 2 technical support.
       - Automated operational tasks.
+    details:
+      - Provided Level 2 technical support.
 
   - id: gfi-nagios
     role: Nagios Technical Expert
@@ -208,8 +215,9 @@ experiences:
     endDate: 2011-01
     highlights:
       - Industrialized Nagios / Centreon monitoring platforms.
-      - Automated operations using Shell, Python and Perl.
       - Developed monitoring scripts and plugins.
+    details:
+      - Automated operations using Shell, Python and Perl.
 
   - id: gfi-operations
     role: Operations Technician

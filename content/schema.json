@@ -145,7 +145,8 @@
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/nonEmptyString" }
         },
-        "highlights": { "$ref": "#/$defs/highlights" }
+        "highlights": { "$ref": "#/$defs/highlights" },
+        "details": { "$ref": "#/$defs/highlights" }
       }
     }
   }

@@ -77,6 +77,20 @@ const structuredData = {
               </li>
             ))
           }
+          <li class="download-item">
+            <a
+              class="download-button"
+              href={t.downloadPath}
+              download
+              aria-label={t.downloadPdf}
+              data-testid="download-pdf"
+            >
+              <svg class="detail-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M11 3h2v10.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6V3ZM4 19h16v2H4v-2Z"></path>
+              </svg>
+              {t.downloadPdfShort}
+            </a>
+          </li>
           <li class="contact-item">
             <a class="contact-button" href={`mailto:${cv.profile.email}`}>
               <svg class="detail-icon" aria-hidden="true" viewBox="0 0 24 24"
@@ -84,7 +98,8 @@ const structuredData = {
                   d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm9 7.2L20 7H4l8 5.2ZM3 9v8h18V9l-9 5.8L3 9Z"
                 ></path></svg
               >
-              {t.contact}
+              <span class="contact-label">{t.contact}</span>
+              <span class="contact-email">{cv.profile.email}</span>
             </a>
           </li>
         </ul>
@@ -143,10 +158,6 @@ const structuredData = {
             }
           </dl>
         </section>
-
-        <a class="download-button" href={t.downloadPath} download data-testid="download-pdf">
-          {t.downloadPdf}<span aria-hidden="true"> ↓</span>
-        </a>
       </aside>
 
       <div class="main-column">
@@ -180,18 +191,39 @@ const structuredData = {
                       <li>{highlight}</li>
                     ))}
                   </ul>
-                  {experience.environment && (
+                  {(experience.details || experience.environment) && (
                     <details class="experience-details">
                       <summary>{t.moreDetails}</summary>
                       <div class="experience-details-content">
-                        <p>{t.technicalEnvironment}</p>
-                        <ul class="environment-tags" aria-label={t.technicalEnvironment}>
-                          {experience.environment.map((technology: string) => (
-                            <li>{technology}</li>
-                          ))}
-                        </ul>
+                        {experience.details && (
+                          <div class="experience-details-section additional-responsibilities">
+                            <p>{t.additionalResponsibilities}</p>
+                            <ul class="highlights">
+                              {experience.details.map((detail: string) => (
+                                <li>{detail}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {experience.environment && (
+                          <div class="experience-details-section technical-environment">
+                            <p>{t.technicalEnvironment}</p>
+                            <ul class="environment-tags" aria-label={t.technicalEnvironment}>
+                              {experience.environment.map((technology: string) => (
+                                <li>{technology}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </details>
+                  )}
+                  {experience.details && (
+                    <ul class="highlights print-details" aria-label={t.additionalResponsibilities}>
+                      {experience.details.map((detail: string) => (
+                        <li>{detail}</li>
+                      ))}
+                    </ul>
                   )}
                 </article>
               ))

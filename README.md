@@ -10,7 +10,7 @@ Le dépôt contient le contenu du CV, le site, les contrôles de qualité et les
 - contenu séparé de la présentation dans `content/cv.fr.yaml` et `content/cv.en.yaml` ;
 - validation structurelle et contrôle de cohérence entre les deux langues ;
 - rendu statique responsive, accessible et utilisable sans JavaScript côté client ;
-- détails complémentaires des expériences sur le site, avec une version PDF volontairement plus synthétique ;
+- détails complémentaires des expériences repliables sur le site et repris dans le PDF, hors stacks techniques redondantes ;
 - génération de deux PDF A4 avec Chromium ;
 - tests Playwright sur Chromium desktop et mobile, avec contrôles Axe ;
 - images Docker pour servir l’artefact statique ou le prévisualiser localement ;

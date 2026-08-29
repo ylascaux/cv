@@ -16,9 +16,11 @@ export const translations = {
     since: 'Depuis',
     currentRole: 'Poste actuel',
     moreDetails: 'Plus de détails',
+    additionalResponsibilities: 'Missions complémentaires',
     technicalEnvironment: 'Environnement technique',
     contact: 'Contact',
     downloadPdf: 'Télécharger le CV en PDF',
+    downloadPdfShort: 'CV PDF',
     downloadPath: '/downloads/yoann-lascaux-cv-fr.pdf',
   },
   en: {
@@ -36,9 +38,11 @@ export const translations = {
     since: 'Since',
     currentRole: 'Current role',
     moreDetails: 'More details',
+    additionalResponsibilities: 'Additional responsibilities',
     technicalEnvironment: 'Technical environment',
     contact: 'Contact',
     downloadPdf: 'Download the PDF resume',
+    downloadPdfShort: 'PDF resume',
     downloadPath: '/downloads/yoann-lascaux-cv-en.pdf',
   },
 } as const satisfies Record<Locale, Record<string, string>>;

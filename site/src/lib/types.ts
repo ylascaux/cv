@@ -14,6 +14,7 @@ export interface TimedEntry {
   endDate: string | null;
   environment?: string[];
   highlights: string[];
+  details?: string[];
 }
 
 export interface Education {

@@ -9,6 +9,7 @@ const pages = [
     skills: 'Compétences',
     currentRole: 'Poste actuel',
     moreDetails: 'Plus de détails',
+    additionalResponsibilities: 'Missions complémentaires',
     alternatePath: '/en/',
     download: '/downloads/yoann-lascaux-cv-fr.pdf',
   },
@@ -19,6 +20,7 @@ const pages = [
     skills: 'Skills',
     currentRole: 'Current role',
     moreDetails: 'More details',
+    additionalResponsibilities: 'Additional responsibilities',
     alternatePath: '/',
     download: '/downloads/yoann-lascaux-cv-en.pdf',
   },
@@ -49,16 +51,30 @@ for (const cv of pages) {
     ).toBe(true);
     await expect(page.locator('.skill-group-icon')).toHaveCount(8);
     const experienceDetails = page.locator('.experience-details');
-    await expect(experienceDetails).toHaveCount(7);
+    await expect(experienceDetails).toHaveCount(8);
     const firstDetails = experienceDetails.first();
     await expect(firstDetails.locator('summary')).toHaveText(cv.moreDetails);
     await expect(firstDetails).not.toHaveAttribute('open', '');
     await firstDetails.locator('summary').click();
     await expect(firstDetails).toHaveAttribute('open', '');
+    await expect(firstDetails.getByText(cv.additionalResponsibilities, { exact: true })).toBeVisible();
     await expect(firstDetails.getByText('AWS', { exact: true })).toBeVisible();
     await expect(page.locator('.language-link')).toHaveAttribute('href', cv.alternatePath);
+    await expect(page.getByTestId('download-pdf')).toBeVisible();
     await expect(page.getByTestId('download-pdf')).toHaveAttribute('href', cv.download);
     expect(errors).toEqual([]);
+  });
+
+  test(`${cv.lang} PDF layout exposes contact details and three columns`, async ({ page }) => {
+    await page.goto(cv.path);
+    await page.emulateMedia({ media: 'print' });
+
+    await expect(page.locator('.contact-email')).toHaveText('yoann-cv@lascaux.ovh');
+    await expect(page.locator('.contact-email')).toBeVisible();
+    await expect(page.locator('.contact-label')).toBeHidden();
+    await expect(page.getByTestId('download-pdf')).toBeHidden();
+    await expect(page.locator('.print-details').first()).toBeVisible();
+    await expect(page.locator('.resume-layout')).toHaveCSS('grid-template-areas', '"profile-sidebar main skills"');
   });
 
   test(`${cv.lang} CV has no automatically detectable accessibility violation`, async ({ page }) => {

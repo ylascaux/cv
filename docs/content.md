@@ -19,7 +19,7 @@ Ils sont versionnés, relisibles en pull request et ne sont jamais remplacés au
 
 Les dates utilisent le format `YYYY-MM`. Une date de fin à `null` signifie que l’expérience est en cours.
 
-Le champ optionnel `environment` d’une expérience contient les technologies affichées dans le panneau « Plus de détails » du site. Ce panneau est volontairement exclu du PDF afin de conserver une version synthétique.
+Les expériences distinguent les réalisations essentielles dans `highlights`, visibles immédiatement sur le site et dans le PDF, des missions complémentaires placées dans le champ optionnel `details`. Le champ optionnel `environment` contient la stack technique. Sur le site, `details` et `environment` sont regroupés dans le panneau « Plus de détails ». Le PDF reprend aussi les missions de `details`, mais pas `environment`, afin d’apporter davantage de contexte sans répéter la colonne des compétences.
 
 ## Import des environnements DoYouBuzz
 
