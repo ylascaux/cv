@@ -1,0 +1,7 @@
+services:
+  cv:
+    build:
+      context: .
+    ports:
+      - '4321:80'
+    restart: unless-stopped
