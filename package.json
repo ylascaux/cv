@@ -1,0 +1,41 @@
+{
+  "name": "yoann-lascaux-cv",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run build:site && npm run pdf:generate",
+    "build:site": "npm run validate:content && astro build",
+    "preview": "astro preview",
+    "validate:content": "node scripts/validate-content.mjs",
+    "check": "npm run validate:content && astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test:e2e": "npm run build:site && playwright test",
+    "pdf": "npm run build:site && npm run pdf:generate",
+    "pdf:generate": "node scripts/generate-pdf.mjs",
+    "quality": "npm run format:check && npm run lint && npm run check && npm run test:e2e"
+  },
+  "dependencies": {
+    "@astrojs/check": "0.9.6",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "astro": "7.2.9",
+    "typescript": "5.9.2",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "@types/node": "26.4.0",
+    "eslint": "10.9.1",
+    "eslint-plugin-astro": "3.1.0",
+    "globals": "17.11.0",
+    "prettier": "3.9.6",
+    "prettier-plugin-astro": "0.14.1",
+    "typescript-eslint": "8.68.0"
+  }
+}

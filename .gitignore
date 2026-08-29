@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+
+# Terraform / Terragrunt (future infrastructure)
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terragrunt-cache/
