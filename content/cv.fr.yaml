@@ -1,0 +1,247 @@
+metadata:
+  locale: fr
+  lastReviewed: 2026-08-29
+  source: https://www.doyoubuzz.com/yoann-lascaux/senior-platform-engineer-sre
+
+profile:
+  name: Yoann Lascaux
+  title: Senior Platform Engineer / SRE
+  location: Treillières (44119), France
+  status: En poste — ouvert aux opportunités
+  driverLicense: Permis de conduire
+  summary: >-
+    Senior Platform Engineer / SRE avec plus de 15 ans d’expérience en infrastructure,
+    Cloud, automatisation et exploitation de systèmes critiques. Spécialisé AWS,
+    Kubernetes, Infrastructure as Code, CI/CD et observabilité, j’interviens sur
+    l’architecture et l’évolution de plateformes Cloud, leur fiabilité et la Developer
+    Experience. J’aime industrialiser les opérations, simplifier l’accès à
+    l’infrastructure et accompagner les équipes dans l’adoption de standards et d’outils
+    permettant de gagner en autonomie.
+  links:
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/yoann-lascaux/
+
+experiences:
+  - id: openclassrooms
+    role: Senior Platform Engineer / SRE
+    organization: OpenClassrooms
+    contract: CDI
+    startDate: 2024-05
+    endDate: null
+    highlights:
+      - Conception et évolution de la plateforme Cloud d’OpenClassrooms, avec un rôle transverse sur l’architecture, l’industrialisation, la fiabilité, l’observabilité et la Developer Experience.
+      - Définition et évolution des standards techniques de la plateforme Cloud sur AWS / EKS / Kubernetes.
+      - Pilotage de sujets d’architecture et d’industrialisation autour de Terraform, Terragrunt, Helm et GitHub Actions.
+      - Contribution aux choix d’architecture, aux arbitrages techniques et à la définition des bonnes pratiques Cloud, Kubernetes et SRE.
+      - Pilotage de l’adoption de Datadog pour unifier monitoring, APM, alerting, observabilité et gestion des incidents.
+      - Amélioration de la résilience de la plateforme via l’automatisation des sauvegardes, restaurations et scénarios de reprise après incident.
+      - Optimisation continue de la fiabilité, des performances et des coûts de l’infrastructure Cloud.
+      - Industrialisation des opérations afin de réduire les tâches manuelles et d’améliorer la reproductibilité des environnements.
+      - Accompagnement des équipes de développement sur les sujets infrastructure, observabilité, CI/CD et bonnes pratiques de production.
+      - Contribution à l’évolution des runners CI/CD et des workflows de déploiement sur Kubernetes.
+      - Intégration de solutions LLM / IA générative dans les workflows de Platform Engineering.
+      - Conception de prototypes autour de gateways LLM, MCP et agents IA pour assister l’analyse, la génération et la validation de changements d’infrastructure.
+      - Expérimentation de services Azure OpenAI / AWS Bedrock, avec prise en compte de l’observabilité, de la qualité et des coûts associés.
+      - Documentation des architectures, partage de connaissances et accompagnement des équipes dans l’adoption de nouveaux outils et standards.
+      - Conception de Golden Paths et de capabilities Platform Engineering afin de standardiser les usages et d’améliorer l’autonomie des équipes de développement.
+
+  - id: vif
+    role: Ingénieur DevOps
+    organization: VIF
+    startDate: 2020-04
+    endDate: 2024-05
+    highlights:
+      - Industrialisation des infrastructures et des processus de déploiement, exploitation des plateformes et accompagnement des équipes de développement.
+      - Conception et automatisation des infrastructures avec Terraform et Ansible/AWX.
+      - Réduction des opérations manuelles grâce à l’automatisation.
+      - Architecture et exploitation de plateformes VMware vSphere et AWS.
+      - Support technique de niveau 2 et 3.
+      - Accompagnement des développeurs sur les problématiques d’infrastructure et de déploiement.
+      - Mise en place et exploitation des solutions de monitoring et d’observabilité.
+      - Documentation des plateformes et procédures techniques.
+      - Industrialisation des procédures d’installation et de déploiement.
+      - Automatisation des opérations avec Python et Bash.
+      - Administration et évolution des pipelines CI/CD Jenkins.
+      - Administration de systèmes Linux.
+
+  - id: oceanet-technology
+    role: Ingénieur DevOps
+    organization: Océanet Technology
+    startDate: 2019-10
+    endDate: 2020-04
+    highlights:
+      - Automatisation de l’installation et de la configuration des serveurs avec SaltStack.
+      - Pilotage de la mise en place d’une nouvelle solution de supervision.
+      - Automatisation des tâches d’exploitation avec Python et Bash.
+      - Montée en compétence et premières mises en œuvre autour de Kubernetes et AWS.
+      - Participation à l’évolution des infrastructures Cloud.
+      - Amélioration des outils et processus utilisés par les équipes d’exploitation.
+
+  - id: qosenergy
+    role: DevOps
+    organization: QosEnergy
+    startDate: 2015-04
+    endDate: 2019-10
+    highlights:
+      - Administration, architecture et automatisation d’une infrastructure composée d’environ 250 serveurs physiques et Cloud.
+      - Administration et exploitation des infrastructures Linux.
+      - Architecture et évolution de la plateforme.
+      - Automatisation de la configuration des serveurs avec Ansible.
+      - Étude et déploiement de solutions Cloud.
+      - Exploitation d’environnements Docker.
+      - Gestion des incidents et participation aux astreintes.
+      - Documentation des architectures et procédures.
+      - Mise en place et exploitation des solutions de sauvegarde et de supervision.
+      - Automatisation avec Python et Shell.
+
+  - id: sii-orange
+    role: Expert Linux
+    organization: SII - Orange
+    startDate: 2013-10
+    endDate: 2015-04
+    highlights:
+      - Étude et déploiement d’une infrastructure CDN Akamai.
+      - Automatisation avec Python et Bash.
+      - Documentation des architectures et procédures techniques.
+      - Administration et expertise Linux.
+
+  - id: sii-orange-business-services
+    role: Expert Technique
+    organization: SII - Orange Business Services
+    startDate: 2011-12
+    endDate: 2013-09
+    highlights:
+      - Automatisation du déploiement d’applications Cloud avec Shell.
+      - Expertise et support Linux de niveau 3.
+      - Administration de services Web.
+      - Compilation et création de packages Linux.
+
+  - id: gfi-oxylane
+    role: Administrateur Systèmes
+    organization: GFI - Oxylane
+    startDate: 2011-02
+    endDate: 2011-11
+    highlights:
+      - Administration des serveurs applicatifs et Web.
+      - Support technique de niveau 2.
+      - Automatisation de tâches d’exploitation.
+
+  - id: gfi-nagios
+    role: Expert Technique Nagios
+    organization: GFI
+    startDate: 2010-01
+    endDate: 2011-01
+    highlights:
+      - Industrialisation des plateformes de supervision Nagios / Centreon.
+      - Automatisation avec Shell, Python et Perl.
+      - Développement de scripts et plugins de supervision.
+
+  - id: gfi-operations
+    role: Technicien d’exploitation
+    organization: GFI
+    startDate: 2008-10
+    endDate: 2009-12
+    highlights:
+      - Exploitation et supervision de systèmes de production en environnement 24/7.
+      - Traitement des incidents et maintien en conditions opérationnelles.
+
+education:
+  - id: aws-solutions-architect
+    title: AWS Solutions Architect Associate — Formation
+    institution: Revolve
+    startDate: 2022-10
+    endDate: 2022-10
+    description: Formation à l’architecture de solutions Cloud sur AWS.
+  - id: terraform
+    title: Terraform
+    institution: Revolve
+    startDate: 2022-04
+    endDate: 2022-04
+    description: Formation à la conception et à l’industrialisation d’infrastructures avec Terraform.
+  - id: dut-networks-telecommunications
+    title: DUT Réseaux et Télécommunications
+    institution: IUT de La Roche-sur-Yon
+    startDate: 2006-09
+    endDate: 2008-06
+    description: Formation supérieure en réseaux et télécommunications.
+
+volunteering:
+  - id: ecole-sainte-therese
+    role: Responsable informatique bénévole
+    organization: École Sainte-Thérèse
+    highlights:
+      - 'Pilotage bénévole de l’informatique de l’établissement : coordination d’une équipe de 6 bénévoles, gestion d’un parc d’environ 50 postes, Google Workspace for Education, GLPI, Docker, budget IT, fournisseurs et accompagnement des enseignants.'
+
+skills:
+  - id: platform-engineering
+    name: Platform Engineering & Kubernetes
+    items:
+      - name: Kubernetes / EKS
+      - name: Helm
+      - name: Karpenter
+      - name: Docker
+      - name: Platform Engineering
+      - name: Golden Paths
+      - name: Architecture de plateformes Cloud
+  - id: cloud
+    name: Cloud
+    items:
+      - name: AWS
+        details: EKS / EC2 / RDS / S3 / IAM / CloudFront / Lambda / EventBridge / KMS / ElastiCache / …
+      - name: Microsoft Azure
+      - name: OVHcloud / OpenStack
+      - name: Google Cloud Platform
+  - id: infrastructure-as-code
+    name: Infrastructure as Code & Automation
+    items:
+      - name: Terraform
+      - name: Terragrunt
+      - name: Ansible / AWX
+      - name: GitOps
+  - id: ci-cd
+    name: CI/CD
+    items:
+      - name: GitHub Actions
+      - name: Jenkins
+      - name: Helm
+      - name: Git
+      - name: Bitbucket
+      - name: ArgoCD
+  - id: ai-llm
+    name: AI / LLM Engineering
+    items:
+      - name: LLM gateway
+      - name: MCP / AI Agents
+      - name: Azure OpenAI
+      - name: AWS Bedrock
+      - name: Prompt Evaluation
+      - name: LLM observability
+  - id: observability-sre
+    name: Observabilité & SRE
+    items:
+      - name: Datadog
+      - name: Prometheus
+      - name: Grafana
+      - name: Nagios / Centreon
+  - id: development
+    name: Développement & Scripting
+    items:
+      - name: Python
+      - name: Bash / Shell
+      - name: YAML
+  - id: systems-networks
+    name: Systèmes & Réseaux
+    items:
+      - name: Linux
+      - name: Apache / Nginx / HAProxy
+      - name: Réseaux TCP/IP
+      - name: Administration systèmes
+      - name: Troubleshooting
+
+languages:
+  - id: english
+    name: Anglais
+    level: Niveau professionnel intermédiaire (B1)
+  - id: french
+    name: Français
+    level: Langue maternelle

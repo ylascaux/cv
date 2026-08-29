@@ -1,0 +1,246 @@
+metadata:
+  locale: en
+  lastReviewed: 2026-08-29
+  source: https://www.doyoubuzz.com/yoann-lascaux/gb
+
+profile:
+  name: Yoann Lascaux
+  title: Senior Platform Engineer / SRE
+  location: Treillières (44119), France
+  status: Employed — open to opportunities
+  driverLicense: Driving licence
+  summary: >-
+    Senior Platform Engineer / SRE with over 15 years of experience in infrastructure,
+    Cloud, automation and operating critical systems. Specialized in AWS, Kubernetes,
+    Infrastructure as Code, CI/CD and observability, I work on Cloud platform architecture
+    and evolution, reliability and Developer Experience. I enjoy industrializing
+    operations, simplifying access to infrastructure and helping engineering teams adopt
+    standards and tools that enable greater autonomy.
+  links:
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/yoann-lascaux/
+
+experiences:
+  - id: openclassrooms
+    role: Senior Platform Engineer / SRE
+    organization: OpenClassrooms
+    contract: Full-time
+    startDate: 2024-05
+    endDate: null
+    highlights:
+      - Design and evolution of OpenClassrooms’ Cloud platform, with a cross-functional role covering architecture, industrialization, reliability, observability and Developer Experience.
+      - Define and evolve technical standards for the AWS / EKS / Kubernetes platform.
+      - Lead architecture and industrialization initiatives around Terraform, Terragrunt, Helm and GitHub Actions.
+      - Contribute to architecture decisions, technical trade-offs and Cloud, Kubernetes and SRE best practices.
+      - Lead the adoption of Datadog to unify monitoring, APM, alerting, observability and incident management.
+      - Improve platform resilience through automated backups, restores and disaster recovery scenarios.
+      - Continuously optimize Cloud infrastructure reliability, performance and costs.
+      - Industrialize infrastructure operations to reduce manual tasks and improve environment reproducibility.
+      - Support development teams on infrastructure, observability, CI/CD and production best practices.
+      - Contribute to the evolution of CI/CD runners and Kubernetes deployment workflows.
+      - Integrate LLM and generative AI solutions into Platform Engineering workflows.
+      - Design prototypes using LLM gateways, MCP and AI agents to assist with infrastructure analysis, generation and validation.
+      - Experiment with Azure OpenAI and AWS Bedrock, including observability, quality and cost considerations.
+      - Document architectures, share knowledge and support teams in adopting new tools and standards.
+      - Design Golden Paths and Platform Engineering capabilities to standardize usage patterns and increase developer autonomy.
+
+  - id: vif
+    role: DevOps Engineer
+    organization: VIF
+    startDate: 2020-04
+    endDate: 2024-05
+    highlights:
+      - Industrialized infrastructure and deployment processes, operated platforms and supported development teams.
+      - Designed and automated infrastructure using Terraform and Ansible/AWX.
+      - Reduced manual operations through automation.
+      - Designed and operated VMware vSphere and AWS platforms.
+      - Provided Level 2 and Level 3 technical support.
+      - Supported developers with infrastructure and deployment topics.
+      - Implemented and operated monitoring and observability solutions.
+      - Documented platforms and technical procedures.
+      - Industrialized installation and deployment processes.
+      - Automated operations using Python and Bash.
+      - Administered and evolved Jenkins CI/CD pipelines.
+      - Administered Linux systems.
+
+  - id: oceanet-technology
+    role: DevOps Engineer
+    organization: Océanet Technology
+    startDate: 2019-10
+    endDate: 2020-04
+    highlights:
+      - Automated server installation and configuration using SaltStack.
+      - Led the implementation of a new monitoring solution.
+      - Automated operational tasks using Python and Bash.
+      - Started implementing and working with Kubernetes and AWS.
+      - Contributed to Cloud infrastructure evolution.
+      - Improved tools and processes used by operations teams.
+
+  - id: qosenergy
+    role: DevOps
+    organization: QosEnergy
+    startDate: 2015-04
+    endDate: 2019-10
+    highlights:
+      - Administered, architected and automated infrastructure composed of approximately 250 physical and Cloud servers.
+      - Administered and operated Linux infrastructure.
+      - Contributed to platform architecture and evolution.
+      - Automated server configuration with Ansible.
+      - Evaluated and deployed Cloud solutions.
+      - Operated Docker environments.
+      - Managed incidents and participated in on-call rotations.
+      - Documented architectures and procedures.
+      - Implemented and operated backup and monitoring solutions.
+      - Automated operations using Python and Shell scripting.
+
+  - id: sii-orange
+    role: Linux Expert
+    organization: SII - Orange
+    startDate: 2013-10
+    endDate: 2015-04
+    highlights:
+      - Designed and deployed an Akamai CDN infrastructure.
+      - Automated operations using Python and Bash.
+      - Documented architectures and technical procedures.
+      - Provided Linux administration and technical expertise.
+
+  - id: sii-orange-business-services
+    role: Technical Expert
+    organization: SII - Orange Business Services
+    startDate: 2011-12
+    endDate: 2013-09
+    highlights:
+      - Automated Cloud application deployments using Shell scripting.
+      - Provided Level 3 Linux expertise and support.
+      - Administered web services.
+      - Built and maintained Linux packages.
+
+  - id: gfi-oxylane
+    role: Systems Administrator
+    organization: GFI - Oxylane
+    startDate: 2011-02
+    endDate: 2011-11
+    highlights:
+      - Administered application and web servers.
+      - Provided Level 2 technical support.
+      - Automated operational tasks.
+
+  - id: gfi-nagios
+    role: Nagios Technical Expert
+    organization: GFI
+    startDate: 2010-01
+    endDate: 2011-01
+    highlights:
+      - Industrialized Nagios / Centreon monitoring platforms.
+      - Automated operations using Shell, Python and Perl.
+      - Developed monitoring scripts and plugins.
+
+  - id: gfi-operations
+    role: Operations Technician
+    organization: GFI
+    startDate: 2008-10
+    endDate: 2009-12
+    highlights:
+      - Operated and monitored production systems in a 24/7 environment.
+      - Managed incidents and maintained systems in operational condition.
+
+education:
+  - id: aws-solutions-architect
+    title: AWS Solutions Architect Associate — Training
+    institution: Revolve
+    startDate: 2022-10
+    endDate: 2022-10
+    description: Training in designing Cloud architectures on AWS.
+  - id: terraform
+    title: Terraform
+    institution: Revolve
+    startDate: 2022-04
+    endDate: 2022-04
+    description: Training in designing and industrializing infrastructure using Terraform.
+  - id: dut-networks-telecommunications
+    title: University Diploma in Networks and Telecommunications
+    institution: IUT de La Roche-sur-Yon
+    startDate: 2006-09
+    endDate: 2008-06
+    description: Higher education diploma in networks and telecommunications.
+
+volunteering:
+  - id: ecole-sainte-therese
+    role: Volunteer IT Manager
+    organization: École Sainte-Thérèse
+    highlights:
+      - 'Volunteer management of the school’s IT environment: coordination of a 6-person volunteer team, management of approximately 50 workstations, Google Workspace for Education, GLPI, Docker, IT budget, vendors and support for teachers.'
+
+skills:
+  - id: platform-engineering
+    name: Platform Engineering & Kubernetes
+    items:
+      - name: Kubernetes / EKS
+      - name: Helm
+      - name: Karpenter
+      - name: Docker
+      - name: Platform Engineering
+      - name: Golden Paths
+      - name: Cloud Platform Architecture
+  - id: cloud
+    name: Cloud
+    items:
+      - name: AWS
+        details: EKS / EC2 / RDS / S3 / IAM / CloudFront / Lambda / EventBridge / KMS / ElastiCache / …
+      - name: Microsoft Azure
+      - name: OVHcloud / OpenStack
+      - name: Google Cloud Platform
+  - id: infrastructure-as-code
+    name: Infrastructure as Code & Automation
+    items:
+      - name: Terraform
+      - name: Terragrunt
+      - name: Ansible / AWX
+      - name: GitOps
+  - id: ci-cd
+    name: CI/CD
+    items:
+      - name: GitHub Actions
+      - name: Jenkins
+      - name: Helm
+      - name: Git
+      - name: Bitbucket
+      - name: ArgoCD
+  - id: ai-llm
+    name: AI / LLM Engineering
+    items:
+      - name: LLM gateway
+      - name: MCP / AI Agents
+      - name: Azure OpenAI
+      - name: AWS Bedrock
+      - name: Prompt Evaluation
+      - name: LLM observability
+  - id: observability-sre
+    name: Observability & SRE
+    items:
+      - name: Datadog
+      - name: Prometheus
+      - name: Grafana
+      - name: Nagios / Centreon
+  - id: development
+    name: Development & Scripting
+    items:
+      - name: Python
+      - name: Bash / Shell
+      - name: YAML
+  - id: systems-networks
+    name: Systems & Networking
+    items:
+      - name: Linux
+      - name: Apache / Nginx / HAProxy
+      - name: TCP/IP Networking
+      - name: Systems Administration
+      - name: Troubleshooting
+
+languages:
+  - id: english
+    name: English
+    level: Intermediate professional proficiency (B1)
+  - id: french
+    name: French
+    level: Native

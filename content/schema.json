@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cv.yoann-lascaux.fr/schema/cv.json",
+  "title": "Curriculum vitae",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "profile", "experiences", "education", "volunteering", "skills", "languages"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locale", "lastReviewed", "source"],
+      "properties": {
+        "locale": { "enum": ["fr", "en"] },
+        "lastReviewed": { "type": "string", "format": "date" },
+        "source": { "type": "string", "format": "uri" }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "title", "location", "status", "summary", "driverLicense", "links"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "location": { "$ref": "#/$defs/nonEmptyString" },
+        "status": { "$ref": "#/$defs/nonEmptyString" },
+        "summary": { "$ref": "#/$defs/nonEmptyString" },
+        "driverLicense": { "$ref": "#/$defs/nonEmptyString" },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "url"],
+            "properties": {
+              "label": { "$ref": "#/$defs/nonEmptyString" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    },
+    "experiences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/timedEntry" }
+    },
+    "education": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "institution", "startDate", "endDate", "description"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "title": { "$ref": "#/$defs/nonEmptyString" },
+          "institution": { "$ref": "#/$defs/nonEmptyString" },
+          "startDate": { "$ref": "#/$defs/yearMonth" },
+          "endDate": { "anyOf": [{ "$ref": "#/$defs/yearMonth" }, { "type": "null" }] },
+          "description": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "volunteering": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "role", "organization", "highlights"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "role": { "$ref": "#/$defs/nonEmptyString" },
+          "organization": { "$ref": "#/$defs/nonEmptyString" },
+          "highlights": { "$ref": "#/$defs/highlights" }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "items"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "name": { "$ref": "#/$defs/nonEmptyString" },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name"],
+              "properties": {
+                "name": { "$ref": "#/$defs/nonEmptyString" },
+                "details": { "$ref": "#/$defs/nonEmptyString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "languages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "level"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "name": { "$ref": "#/$defs/nonEmptyString" },
+          "level": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "yearMonth": { "type": "string", "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$" },
+    "highlights": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "timedEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "organization", "startDate", "endDate", "highlights"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "role": { "$ref": "#/$defs/nonEmptyString" },
+        "organization": { "$ref": "#/$defs/nonEmptyString" },
+        "contract": { "$ref": "#/$defs/nonEmptyString" },
+        "startDate": { "$ref": "#/$defs/yearMonth" },
+        "endDate": { "anyOf": [{ "$ref": "#/$defs/yearMonth" }, { "type": "null" }] },
+        "highlights": { "$ref": "#/$defs/highlights" }
+      }
+    }
+  }
+}
