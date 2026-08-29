@@ -47,7 +47,12 @@ export interface Cv {
     id: string;
     role: string;
     organization: string;
-    highlights: string[];
+    summary: string;
+    metrics: Array<{
+      value: string;
+      label: string;
+    }>;
+    areas: string[];
   }>;
   skills: Array<{
     id: string;

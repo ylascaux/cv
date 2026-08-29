@@ -253,8 +253,17 @@ volunteering:
   - id: ecole-sainte-therese
     role: Responsable informatique bénévole
     organization: École Sainte-Thérèse
-    highlights:
-      - 'Pilotage bénévole de l’informatique de l’établissement : coordination d’une équipe de 6 bénévoles, gestion d’un parc d’environ 50 postes, Google Workspace for Education, GLPI, Docker, budget IT, fournisseurs et accompagnement des enseignants.'
+    summary: J’assure la continuité et l’évolution des services numériques de l’école, de la stratégie aux interventions de proximité, au service de l’équipe pédagogique.
+    metrics:
+      - value: '6'
+        label: bénévoles coordonnés
+      - value: ~50
+        label: postes administrés
+    areas:
+      - Google Workspace for Education
+      - GLPI & support utilisateurs
+      - Docker
+      - Budget IT & fournisseurs
 
 skills:
   - id: platform-engineering

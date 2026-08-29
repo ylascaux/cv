@@ -252,8 +252,17 @@ volunteering:
   - id: ecole-sainte-therese
     role: Volunteer IT Manager
     organization: École Sainte-Thérèse
-    highlights:
-      - 'Volunteer management of the school’s IT environment: coordination of a 6-person volunteer team, management of approximately 50 workstations, Google Workspace for Education, GLPI, Docker, IT budget, vendors and support for teachers.'
+    summary: I ensure the continuity and evolution of the school’s digital services, from strategy to hands-on support, serving the teaching team.
+    metrics:
+      - value: '6'
+        label: volunteers coordinated
+      - value: ~50
+        label: workstations managed
+    areas:
+      - Google Workspace for Education
+      - GLPI & user support
+      - Docker
+      - IT budget & vendors
 
 skills:
   - id: platform-engineering

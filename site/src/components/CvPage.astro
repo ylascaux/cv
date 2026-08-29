@@ -259,15 +259,34 @@ const structuredData = {
             <Icon class="section-icon" name="volunteering" />
             <h2 id="volunteering-title">{t.volunteering}</h2>
           </div>
-          <div class="entries">
+          <div class="entries volunteering-entries">
             {
               cv.volunteering.map((entry: Volunteering) => (
-                <article class="entry">
-                  <h3>{entry.role}</h3>
-                  <p class="organization">{entry.organization}</p>
-                  <ul class="highlights">
-                    {entry.highlights.map((highlight: string) => (
-                      <li>{highlight}</li>
+                <article class="entry volunteering-card">
+                  <header class="volunteering-header">
+                    <span class="volunteering-mark" aria-hidden="true">
+                      <Icon name="school-it" />
+                    </span>
+                    <div class="volunteering-identity">
+                      <h3>{entry.role}</h3>
+                      <p class="organization">{entry.organization}</p>
+                    </div>
+                    <dl class="volunteering-metrics">
+                      {entry.metrics.map((metric) => (
+                        <div>
+                          <dt>{metric.value}</dt>
+                          <dd>{metric.label}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </header>
+                  <p class="volunteering-summary">{entry.summary}</p>
+                  <ul
+                    class="volunteering-areas"
+                    aria-label={locale === 'fr' ? "Domaines d'intervention" : 'Areas of responsibility'}
+                  >
+                    {entry.areas.map((area: string) => (
+                      <li>{area}</li>
                     ))}
                   </ul>
                 </article>

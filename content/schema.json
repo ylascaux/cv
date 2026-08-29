@@ -69,12 +69,26 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "role", "organization", "highlights"],
+        "required": ["id", "role", "organization", "summary", "metrics", "areas"],
         "properties": {
           "id": { "$ref": "#/$defs/id" },
           "role": { "$ref": "#/$defs/nonEmptyString" },
           "organization": { "$ref": "#/$defs/nonEmptyString" },
-          "highlights": { "$ref": "#/$defs/highlights" }
+          "summary": { "$ref": "#/$defs/nonEmptyString" },
+          "metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["value", "label"],
+              "properties": {
+                "value": { "$ref": "#/$defs/nonEmptyString" },
+                "label": { "$ref": "#/$defs/nonEmptyString" }
+              }
+            }
+          },
+          "areas": { "$ref": "#/$defs/highlights" }
         }
       }
     },
