@@ -1,0 +1,37 @@
+---
+import '../styles/global.css';
+import type { Locale } from '../lib/types';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+}
+
+const { locale, title, description } = Astro.props;
+const alternateLocale = locale === 'fr' ? 'en' : 'fr';
+const alternateHref = locale === 'fr' ? '/en/' : '/';
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#122117" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang={alternateLocale} href={alternateHref} />
+    <link rel="alternate" hreflang={locale} href={locale === 'fr' ? '/' : '/en/'} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

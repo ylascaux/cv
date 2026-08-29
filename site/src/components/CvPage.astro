@@ -1,0 +1,198 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatPeriod, translations } from '../lib/i18n';
+import type { Cv, Education, Link, TimedEntry } from '../lib/types';
+
+type Volunteering = Cv['volunteering'][number];
+type SkillGroup = Cv['skills'][number];
+type Skill = SkillGroup['items'][number];
+type Language = Cv['languages'][number];
+
+interface Props {
+  cv: Cv;
+}
+
+const { cv } = Astro.props;
+const locale = cv.metadata.locale;
+const t = translations[locale];
+const description = `${cv.profile.name} — ${cv.profile.title}. ${cv.profile.summary}`;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: cv.profile.name,
+  jobTitle: cv.profile.title,
+  address: cv.profile.location,
+  sameAs: cv.profile.links.map(({ url }: Link) => url),
+};
+---
+
+<BaseLayout locale={locale} title={`${cv.profile.name} — ${cv.profile.title}`} description={description}>
+  <a class="skip-link" href="#main">{t.skip}</a>
+
+  <header class="site-header">
+    <a class="identity" href={locale === 'fr' ? '/' : '/en/'} aria-label={cv.profile.name}>
+      <span class="identity-mark" aria-hidden="true">YL</span>
+      <span>{cv.profile.name}</span>
+    </a>
+    <nav aria-label={locale === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+      <a href="#experience">{t.experience}</a>
+      <a href="#skills">{t.skills}</a>
+      <a class="language-link" href={t.languageHref} lang={locale === 'fr' ? 'en' : 'fr'} title={t.language}>
+        {t.languageCode}
+      </a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow">{cv.profile.status}</p>
+        <h1 id="page-title">{cv.profile.title}</h1>
+        <p class="hero-summary">{cv.profile.summary}</p>
+        <div class="hero-meta">
+          <span>{cv.profile.location}</span>
+          <span>{cv.profile.driverLicense}</span>
+          {
+            cv.profile.links.map((link: Link) => (
+              <a href={link.url} target="_blank" rel="noreferrer">
+                {link.label}
+                <span aria-hidden="true"> ↗</span>
+              </a>
+            ))
+          }
+        </div>
+        <div class="hero-actions">
+          <a class="download-button" href={t.downloadPath} download data-testid="download-pdf">
+            {t.downloadPdf}<span aria-hidden="true"> ↓</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-monogram" aria-hidden="true">YL</div>
+    </section>
+
+    <div class="content-grid">
+      <div class="main-column">
+        <section id="experience" class="section" aria-labelledby="experience-title">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">01</span>
+            <h2 id="experience-title">{t.experience}</h2>
+          </div>
+          <div class="timeline">
+            {
+              cv.experiences.map((experience: TimedEntry) => (
+                <article class="timeline-item">
+                  <div class="timeline-marker" aria-hidden="true" />
+                  <header class="entry-header">
+                    <div>
+                      <h3>{experience.role}</h3>
+                      <p class="organization">{experience.organization}</p>
+                    </div>
+                    <div class="entry-meta">
+                      <time>{formatPeriod(experience.startDate, experience.endDate, locale)}</time>
+                      {experience.contract && <span>{experience.contract}</span>}
+                    </div>
+                  </header>
+                  <ul class="highlights">
+                    {experience.highlights.map((highlight: string) => (
+                      <li>{highlight}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section id="education" class="section" aria-labelledby="education-title">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">02</span>
+            <h2 id="education-title">{t.education}</h2>
+          </div>
+          <div class="cards">
+            {
+              cv.education.map((education: Education) => (
+                <article class="card">
+                  <p class="card-date">{formatPeriod(education.startDate, education.endDate, locale)}</p>
+                  <h3>{education.title}</h3>
+                  <p class="organization">{education.institution}</p>
+                  <p>{education.description}</p>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section id="volunteering" class="section" aria-labelledby="volunteering-title">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">03</span>
+            <h2 id="volunteering-title">{t.volunteering}</h2>
+          </div>
+          {
+            cv.volunteering.map((entry: Volunteering) => (
+              <article class="card volunteering-card">
+                <h3>{entry.role}</h3>
+                <p class="organization">{entry.organization}</p>
+                <ul class="highlights">
+                  {entry.highlights.map((highlight: string) => (
+                    <li>{highlight}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </section>
+      </div>
+
+      <aside class="sidebar" aria-label={locale === 'fr' ? 'Compétences et langues' : 'Skills and languages'}>
+        <section id="skills" class="section" aria-labelledby="skills-title">
+          <div class="section-heading compact">
+            <span class="section-number" aria-hidden="true">04</span>
+            <h2 id="skills-title">{t.skills}</h2>
+          </div>
+          <div class="skill-groups">
+            {
+              cv.skills.map((group: SkillGroup) => (
+                <article class="skill-group">
+                  <h3>{group.name}</h3>
+                  <ul class="tag-list">
+                    {group.items.map((skill: Skill) => (
+                      <li>
+                        <span>{skill.name}</span>
+                        {skill.details && <small>{skill.details}</small>}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section id="languages" class="section languages" aria-labelledby="languages-title">
+          <div class="section-heading compact">
+            <span class="section-number" aria-hidden="true">05</span>
+            <h2 id="languages-title">{t.languages}</h2>
+          </div>
+          <dl>
+            {
+              cv.languages.map((language: Language) => (
+                <div>
+                  <dt>{language.name}</dt>
+                  <dd>{language.level}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <p>{cv.profile.name} · {cv.profile.title}</p>
+    <a href={cv.metadata.source} target="_blank" rel="noreferrer">{t.source}<span aria-hidden="true"> ↗</span></a>
+  </footer>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</BaseLayout>

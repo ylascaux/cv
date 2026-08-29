@@ -1,0 +1,8 @@
+---
+import CvPage from '../../components/CvPage.astro';
+import { getCv } from '../../lib/content';
+
+const cv = await getCv('en');
+---
+
+<CvPage cv={cv} />
