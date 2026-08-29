@@ -3,3 +3,4 @@ dist/
 .astro/
 package-lock.json
 *.pdf
+.github/dependabot.yml
