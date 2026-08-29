@@ -1,0 +1,19 @@
+FROM node:24.7.0-bookworm-slim
+
+ENV ASTRO_TELEMETRY_DISABLED=1
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci \
+    && npx playwright install --with-deps chromium
+
+COPY astro.config.mjs tsconfig.json ./
+COPY content ./content
+COPY scripts ./scripts
+COPY site ./site
+
+RUN chmod +x /app/scripts/preview-entrypoint.sh
+
+EXPOSE 4321
+CMD ["/app/scripts/preview-entrypoint.sh"]
