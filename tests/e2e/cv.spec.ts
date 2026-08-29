@@ -12,6 +12,8 @@ const pages = [
     additionalResponsibilities: 'Missions complémentaires',
     alternatePath: '/en/',
     download: '/downloads/yoann-lascaux-cv-fr.pdf',
+    enableDarkTheme: 'Activer le thème sombre',
+    enableLightTheme: 'Activer le thème clair',
   },
   {
     path: '/en/',
@@ -23,6 +25,8 @@ const pages = [
     additionalResponsibilities: 'Additional responsibilities',
     alternatePath: '/',
     download: '/downloads/yoann-lascaux-cv-en.pdf',
+    enableDarkTheme: 'Enable dark theme',
+    enableLightTheme: 'Enable light theme',
   },
 ] as const;
 
@@ -65,10 +69,31 @@ for (const cv of pages) {
     expect(errors).toEqual([]);
   });
 
+  test(`${cv.lang} theme follows the system and can be persisted`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.goto(cv.path);
+
+    const themeToggle = page.getByTestId('theme-toggle');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(themeToggle).toHaveAccessibleName(cv.enableLightTheme);
+
+    await themeToggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(themeToggle).toHaveAccessibleName(cv.enableDarkTheme);
+    expect(await page.evaluate(() => localStorage.getItem('cv-theme'))).toBe('light');
+
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  });
+
   test(`${cv.lang} PDF layout exposes contact details and three columns`, async ({ page }) => {
     await page.goto(cv.path);
+    await page.evaluate(() => localStorage.setItem('cv-theme', 'dark'));
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await page.emulateMedia({ media: 'print' });
 
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
     await expect(page.locator('.contact-email')).toHaveText('yoann-cv@lascaux.ovh');
     await expect(page.locator('.contact-email')).toBeVisible();
     await expect(page.locator('.contact-label')).toBeHidden();

@@ -25,7 +25,23 @@ const alternateHref = locale === 'fr' ? '/en/' : '/';
     <meta property="og:description" content={description} />
     <meta name="twitter:card" content="summary" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#5F24C4" />
+    <meta id="theme-color" name="theme-color" content="#ffffff" />
+    <script is:inline>
+      (() => {
+        const storedTheme = localStorage.getItem('cv-theme');
+        const theme =
+          storedTheme === 'light' || storedTheme === 'dark'
+            ? storedTheme
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute('content', theme === 'dark' ? '#15161a' : '#ffffff');
+      })();
+    </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" hreflang={alternateLocale} href={alternateHref} />
     <link rel="alternate" hreflang={locale} href={locale === 'fr' ? '/' : '/en/'} />

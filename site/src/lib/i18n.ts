@@ -22,6 +22,8 @@ export const translations = {
     downloadPdf: 'Télécharger le CV en PDF',
     downloadPdfShort: 'CV PDF',
     downloadPath: '/downloads/yoann-lascaux-cv-fr.pdf',
+    enableDarkTheme: 'Activer le thème sombre',
+    enableLightTheme: 'Activer le thème clair',
   },
   en: {
     skip: 'Skip to content',
@@ -44,6 +46,8 @@ export const translations = {
     downloadPdf: 'Download the PDF resume',
     downloadPdfShort: 'PDF resume',
     downloadPath: '/downloads/yoann-lascaux-cv-en.pdf',
+    enableDarkTheme: 'Enable dark theme',
+    enableLightTheme: 'Enable light theme',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
