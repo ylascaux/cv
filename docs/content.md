@@ -19,6 +19,18 @@ Ils sont versionnés, relisibles en pull request et ne sont jamais remplacés au
 
 Les dates utilisent le format `YYYY-MM`. Une date de fin à `null` signifie que l’expérience est en cours.
 
+Le champ optionnel `environment` d’une expérience contient les technologies affichées dans le panneau « Plus de détails » du site. Ce panneau est volontairement exclu du PDF afin de conserver une version synthétique.
+
+## Import des environnements DoYouBuzz
+
+Les environnements techniques ont été importés manuellement le 30 août 2026 depuis les fiches détaillées du CV public :
+
+```text
+https://www.doyoubuzz.com/yoann-lascaux/senior-platform-engineer-sre
+```
+
+Chaque valeur a été rapprochée de l’expérience correspondante puis enregistrée dans les YAML français et anglais. DoYouBuzz reste une source ponctuelle, pas une dépendance du build : toute nouvelle donnée doit être relue avant publication. Les expériences `gfi-nagios` et `gfi-operations` n’exposent aucun environnement détaillé dans la source et ne comportent donc pas ce champ.
+
 ## Validation
 
 `content/schema.json` décrit les champs autorisés. Le script de validation contrôle également :
