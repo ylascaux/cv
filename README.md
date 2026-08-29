@@ -9,7 +9,7 @@ Pour le développement direct :
 - Node.js 24 ;
 - npm 11.
 
-Pour exécuter uniquement le déploiement local :
+Pour l’exécution avec Docker Compose :
 
 - Docker ;
 - Docker Compose.
@@ -20,9 +20,16 @@ Pour exécuter uniquement le déploiement local :
 docker compose up --build
 ```
 
-Le CV français est disponible sur <http://localhost:4321> et la version anglaise sur <http://localhost:4321/en/>.
+Deux services utilisant les contenus versionnés sont disponibles :
 
-Arrêter et supprimer le conteneur :
+| Service   | Usage                                    | Français                | Anglais                     |
+| --------- | ---------------------------------------- | ----------------------- | --------------------------- |
+| `cv`      | image statique Nginx proche de la cible  | <http://localhost:4321> | <http://localhost:4321/en/> |
+| `preview` | prévisualisation de travail avec les PDF | <http://localhost:4322> | <http://localhost:4322/en/> |
+
+Le service `preview` construit Astro, génère les PDF français et anglais, puis sert l’artefact sur le port `4322`.
+
+Arrêter et supprimer les conteneurs :
 
 ```shell
 docker compose down
@@ -45,7 +52,7 @@ npm run check             # Vérifie le contenu et les composants Astro
 npm run test:e2e          # Teste les pages, le responsive et l’accessibilité
 npm run pdf               # Génère les deux PDF A4 dans dist/downloads/
 npm run build             # Produit le site et les PDF dans dist/
-npm run quality           # Exécute tous les contrôles locaux
+npm run quality           # Exécute tous les contrôles
 npm run preview           # Sert localement le dernier build
 ```
 
@@ -54,10 +61,11 @@ npm run preview           # Sert localement le dernier build
 ```text
 content/             Données du CV en français et anglais + JSON Schema
 site/                Pages, composants, styles et ressources Astro
-scripts/             Validation et futurs outils d’import/génération
-docs/                Architecture, roadmap et décisions
-compose.yaml          Déploiement local de l’image statique
+scripts/             Validation, preview et génération PDF
+docs/                Architecture, usage, roadmap et décisions
+compose.yaml          Site statique et preview locale
 Dockerfile            Build Astro puis image Nginx minimale
+Dockerfile.preview    Preview Astro avec génération des PDF
 ```
 
 ## Documentation
@@ -68,10 +76,6 @@ Dockerfile            Build Astro puis image Nginx minimale
 - [ADR 0001 — Astro](docs/decisions/0001-astro.md)
 - [ADR 0002 — contenu YAML](docs/decisions/0002-contenu-yaml.md)
 - [ADR 0003 — Docker Compose local](docs/decisions/0003-deploiement-local-compose.md)
-
-## Sources du contenu
-
-Le contenu initial a été retranscrit depuis les versions publiques française et anglaise du CV DoYouBuzz. DoYouBuzz n’est pas appelé pendant le build et toute mise à jour importée doit être revue avant publication.
 
 ## PDF
 
@@ -88,8 +92,8 @@ npx playwright install chromium
 
 ## Intégration continue
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) exécute les contrôles, génère l’artefact statique avec les PDF et construit l’image Docker sur les pull requests et sur `main`. Il ne réalise aucun déploiement.
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) exécute les contrôles, génère l’artefact statique avec les PDF et construit les images Docker sur les pull requests et sur `main`. Il ne réalise aucun déploiement.
 
 ## Suite prévue
 
-L’infrastructure Terraform/Terragrunt et le CD sont volontairement reportés. Les prochains travaux locaux pourront porter sur la relecture éditoriale, l’amélioration du design/PDF et l’outillage d’import.
+L’infrastructure Terraform/Terragrunt et le CD sont volontairement reportés jusqu’au choix de la cible d’hébergement.

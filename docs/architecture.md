@@ -4,12 +4,12 @@
 
 ```mermaid
 flowchart TD
-    S[DoYouBuzz / PDF] -->|import contrôlé| C[content/cv.*.yaml]
-    E[Édition manuelle] --> C
+    E[Édition manuelle] --> C[content/cv.*.yaml]
     C --> V[Validation JSON Schema]
     V --> A[Build Astro]
-    A --> D[dist/ statique]
+    A --> D[dist/ statique et PDF]
     D --> N[Nginx dans Docker Compose]
+    D --> P[Preview Astro locale]
     D -. futur .-> CI[GitHub Actions]
     CI -. futur .-> I[Terraform / Terragrunt]
 ```
@@ -18,7 +18,7 @@ flowchart TD
 
 - `content/` contient la source éditoriale bilingue et son contrat de validation.
 - `site/` contient exclusivement la présentation Astro, les styles et les ressources publiques.
-- `scripts/` contient les validations et, plus tard, les outils d’import ou de génération.
+- `scripts/` contient la validation, le démarrage de la preview et la génération PDF.
 - `dist/` est un artefact généré et ne doit jamais être modifié ni versionné.
 - `docs/decisions/` conserve les raisons des choix structurants.
 - `infra/` sera créé lorsque la cible de déploiement distante sera choisie.
@@ -27,26 +27,22 @@ flowchart TD
 
 Les versions française et anglaise partagent le même schéma et les mêmes identifiants fonctionnels. Les textes restent séparés afin qu’une traduction puisse être revue sans toucher à la présentation.
 
-La source initiale est DoYouBuzz :
-
-- français : <https://www.doyoubuzz.com/yoann-lascaux/senior-platform-engineer-sre> ;
-- anglais : <https://www.doyoubuzz.com/yoann-lascaux/gb> ;
-- PDF français : <https://www.doyoubuzz.com/yoann-lascaux/senior-platform-engineer-sre/download>.
-
-DoYouBuzz n’est pas une dépendance du build : toutes les données publiées sont versionnées dans ce dépôt.
+Les fichiers YAML versionnés constituent l’unique source de vérité. Chaque modification passe par la validation du schéma, les contrôles Astro et les tests avant la génération de l’artefact statique.
 
 ## Exécution locale
 
-Le build multi-stage produit les fichiers avec Node.js puis les sert avec Nginx. Docker Compose expose le site sur `http://localhost:4321`.
+Docker Compose expose deux modes utilisant les mêmes contenus :
 
-Cette cible locale valide le contrat de déploiement d’un artefact statique sans préjuger du futur fournisseur cloud.
+- `cv` sur `http://localhost:4321`, construit dans une image multi-stage puis servi avec Nginx ;
+- `preview` sur `http://localhost:4322`, qui construit Astro, génère les PDF puis sert l’artefact avec le serveur de preview Astro.
+
+Cette organisation permet de travailler sur le rendu et les PDF via `preview`, puis de vérifier séparément l’image statique proche de la future cible de déploiement.
 
 ## Contraintes de sécurité
 
-- aucun secret dans le contenu ou dans l’image ;
+- aucun secret dans le contenu ou dans les images ;
 - aucun état Terraform dans Git ;
-- aucune récupération de contenu externe pendant le build ;
-- aucune publication automatique d’un import ;
+- aucune récupération de contenu externe pendant le build ou les tests ;
 - liens externes ouverts avec les protections adaptées ;
 - en-têtes HTTP de base configurés dans Nginx.
 
