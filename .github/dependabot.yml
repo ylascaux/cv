@@ -2,7 +2,7 @@ version: 2
 
 updates:
   - package-ecosystem: npm
-    directory: /
+    directory: "/"
     schedule:
       interval: weekly
       day: monday
@@ -22,7 +22,7 @@ updates:
       - npm
 
   - package-ecosystem: github-actions
-    directory: /
+    directory: "/"
     schedule:
       interval: weekly
       day: monday
@@ -37,7 +37,7 @@ updates:
       - github-actions
 
   - package-ecosystem: docker
-    directory: /
+    directory: "/"
     schedule:
       interval: weekly
       day: monday
