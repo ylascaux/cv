@@ -7,6 +7,8 @@ const pages = [
     lang: 'fr',
     experience: 'Expériences',
     skills: 'Compétences',
+    currentRole: 'Poste actuel',
+    moreDetails: 'Plus de détails',
     alternatePath: '/en/',
     download: '/downloads/yoann-lascaux-cv-fr.pdf',
   },
@@ -15,6 +17,8 @@ const pages = [
     lang: 'en',
     experience: 'Experience',
     skills: 'Skills',
+    currentRole: 'Current role',
+    moreDetails: 'More details',
     alternatePath: '/',
     download: '/downloads/yoann-lascaux-cv-en.pdf',
   },
@@ -34,6 +38,24 @@ for (const cv of pages) {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Senior Platform Engineer / SRE');
     await expect(page.getByRole('heading', { name: cv.experience })).toBeVisible();
     await expect(page.getByRole('heading', { name: cv.skills })).toBeVisible();
+    await expect(page.getByText(cv.currentRole, { exact: true })).toBeVisible();
+    await expect(page.locator('.company-mark')).toHaveCount(9);
+    const companyLogos = page.locator('.company-mark img');
+    await expect(companyLogos).toHaveCount(9);
+    expect(
+      await companyLogos.evaluateAll((images) =>
+        images.every((image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0),
+      ),
+    ).toBe(true);
+    await expect(page.locator('.skill-group-icon')).toHaveCount(8);
+    const experienceDetails = page.locator('.experience-details');
+    await expect(experienceDetails).toHaveCount(7);
+    const firstDetails = experienceDetails.first();
+    await expect(firstDetails.locator('summary')).toHaveText(cv.moreDetails);
+    await expect(firstDetails).not.toHaveAttribute('open', '');
+    await firstDetails.locator('summary').click();
+    await expect(firstDetails).toHaveAttribute('open', '');
+    await expect(firstDetails.getByText('AWS', { exact: true })).toBeVisible();
     await expect(page.locator('.language-link')).toHaveAttribute('href', cv.alternatePath);
     await expect(page.getByTestId('download-pdf')).toHaveAttribute('href', cv.download);
     expect(errors).toEqual([]);
