@@ -99,6 +99,11 @@ for (const cv of pages) {
     await expect(firstDetails.getByText(cv.additionalResponsibilities, { exact: true })).toBeVisible();
     await expect(firstDetails.getByText('AWS', { exact: true })).toBeVisible();
     await expect(page.locator('.language-link')).toHaveAttribute('href', cv.alternatePath);
+    await expect(page.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/yoann-lascaux/',
+    );
+    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/ylascaux');
     await expect(page.getByTestId('download-pdf')).toBeVisible();
     await expect(page.getByTestId('download-pdf')).toHaveAttribute('href', cv.download);
     expect(errors).toEqual([]);

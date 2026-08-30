@@ -19,6 +19,8 @@ profile:
   links:
     - label: LinkedIn
       url: https://www.linkedin.com/in/yoann-lascaux/
+    - label: GitHub
+      url: https://github.com/ylascaux
 
 experiences:
   - id: openclassrooms
