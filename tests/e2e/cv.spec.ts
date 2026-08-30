@@ -14,6 +14,10 @@ const pages = [
     download: '/downloads/yoann-lascaux-cv-fr.pdf',
     enableDarkTheme: 'Activer le thème sombre',
     enableLightTheme: 'Activer le thème clair',
+    canonical: 'https://cv.yoann-lascaux.fr/',
+    alternate: 'https://cv.yoann-lascaux.fr/en/',
+    seoDescription:
+      'CV de Yoann Lascaux, Senior Platform Engineer / SRE spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
   },
   {
     path: '/en/',
@@ -27,6 +31,10 @@ const pages = [
     download: '/downloads/yoann-lascaux-cv-en.pdf',
     enableDarkTheme: 'Enable dark theme',
     enableLightTheme: 'Enable light theme',
+    canonical: 'https://cv.yoann-lascaux.fr/en/',
+    alternate: 'https://cv.yoann-lascaux.fr/',
+    seoDescription:
+      'Resume of Yoann Lascaux, Senior Platform Engineer / SRE specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
   },
 ] as const;
 
@@ -41,6 +49,33 @@ for (const cv of pages) {
     await page.goto(cv.path);
 
     await expect(page.locator('html')).toHaveAttribute('lang', cv.lang);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', cv.seoDescription);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', cv.canonical);
+    await expect(page.locator(`link[rel="alternate"][hreflang="${cv.lang}"]`)).toHaveAttribute('href', cv.canonical);
+    await expect(
+      page.locator(`link[rel="alternate"][hreflang]:not([hreflang="${cv.lang}"]):not([hreflang="x-default"])`),
+    ).toHaveAttribute('href', cv.alternate);
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', cv.canonical);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      'https://cv.yoann-lascaux.fr/og-image.png',
+    );
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+    const socialImageDimensions = await page.evaluate(
+      () =>
+        new Promise<{ width: number; height: number }>((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve({ width: image.naturalWidth, height: image.naturalHeight });
+          image.onerror = () => reject(new Error('Unable to load the social image.'));
+          image.src = '/og-image.png';
+        }),
+    );
+    expect(socialImageDimensions).toEqual({ width: 1200, height: 630 });
+    const structuredData = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? '{}');
+    expect(structuredData['@graph'].map((item: { '@type': string }) => item['@type'])).toEqual([
+      'ProfilePage',
+      'Person',
+    ]);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Senior Platform Engineer / SRE');
     await expect(page.getByRole('heading', { name: cv.experience })).toBeVisible();
     await expect(page.getByRole('heading', { name: cv.skills })).toBeVisible();
@@ -117,3 +152,17 @@ for (const cv of pages) {
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
   });
 }
+
+test('SEO discovery files expose the public bilingual URLs', async ({ request }) => {
+  const robotsResponse = await request.get('/robots.txt');
+  expect(robotsResponse.ok()).toBe(true);
+  expect(await robotsResponse.text()).toContain('Sitemap: https://cv.yoann-lascaux.fr/sitemap.xml');
+
+  const sitemapResponse = await request.get('/sitemap.xml');
+  expect(sitemapResponse.ok()).toBe(true);
+  expect(sitemapResponse.headers()['content-type']).toContain('xml');
+  const sitemap = await sitemapResponse.text();
+  expect(sitemap).toContain('<loc>https://cv.yoann-lascaux.fr/</loc>');
+  expect(sitemap).toContain('<loc>https://cv.yoann-lascaux.fr/en/</loc>');
+  expect(sitemap).toContain('hreflang="x-default"');
+});

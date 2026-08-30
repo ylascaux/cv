@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Yoann Lascaux — Senior Platform Engineer / SRE</title>
+  <desc id="description">Social sharing card for Yoann Lascaux's resume.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17131f" />
+      <stop offset="0.55" stop-color="#251a38" />
+      <stop offset="1" stop-color="#5f24c4" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b794f6" />
+      <stop offset="1" stop-color="#ffffff" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#background)" />
+  <circle cx="1080" cy="80" r="250" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2" />
+  <circle cx="1080" cy="80" r="175" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="2" />
+  <path d="M0 545 360 340 620 492 930 250 1200 410V630H0Z" fill="#0f0d14" fill-opacity="0.22" />
+  <g fill="none" stroke="#c9b2f5" stroke-opacity="0.28" stroke-width="2">
+    <path d="M760 115h100l55 55h100" />
+    <path d="M820 205h95l60 60h130" />
+    <circle cx="760" cy="115" r="7" fill="#b794f6" />
+    <circle cx="1015" cy="170" r="7" fill="#b794f6" />
+    <circle cx="820" cy="205" r="7" fill="#b794f6" />
+    <circle cx="1105" cy="265" r="7" fill="#b794f6" />
+  </g>
+  <rect x="72" y="78" width="76" height="8" rx="4" fill="#b794f6" />
+  <text x="72" y="180" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="700" letter-spacing="1">YOANN LASCAUX</text>
+  <text x="72" y="250" fill="url(#accent)" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="400">Senior Platform Engineer / SRE</text>
+  <text x="72" y="348" fill="#d8d2e1" font-family="Arial, Helvetica, sans-serif" font-size="26">AWS  ·  Kubernetes  ·  Terraform  ·  Platform Engineering</text>
+  <line x1="72" y1="405" x2="610" y2="405" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2" />
+  <text x="72" y="474" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="2">CV.YOANN-LASCAUX.FR</text>
+  <g transform="translate(1035 475)">
+    <rect width="92" height="92" rx="22" fill="#ffffff" fill-opacity="0.12" />
+    <path d="M25 29h42v10H25V29Zm0 17h42v10H25V46Zm0 17h29v10H25V63Z" fill="#ffffff" />
+  </g>
+</svg>

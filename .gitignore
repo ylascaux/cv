@@ -9,9 +9,10 @@ test-results/
 .env.*
 !.env.example
 
-# Terraform / Terragrunt (future infrastructure)
+# OpenTofu / Terragrunt
 **/.terraform/*
 *.tfstate
 *.tfstate.*
 *.tfplan
 .terragrunt-cache/
+.terragrunt-stack/

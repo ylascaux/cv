@@ -1,0 +1,168 @@
+name: Infrastructure deployment
+
+on:
+  pull_request:
+    paths:
+      - 'deploy/**'
+      - 'flake.nix'
+      - 'flake.lock'
+      - '.github/workflows/deploy-infrastructure.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'deploy/**'
+      - 'flake.nix'
+      - 'flake.lock'
+      - '.github/workflows/deploy-infrastructure.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-infrastructure
+  cancel-in-progress: false
+
+env:
+  TMPDIR: /tmp
+  OVH_APPLICATION_KEY: ${{ secrets.OVH_APPLICATION_KEY }}
+  OVH_APPLICATION_SECRET: ${{ secrets.OVH_APPLICATION_SECRET }}
+  OVH_CONSUMER_KEY: ${{ secrets.OVH_CONSUMER_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.OVH_STATE_S3_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.OVH_STATE_S3_SECRET_KEY }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+jobs:
+  plan:
+    name: Plan production infrastructure
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Check required configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            OVH_APPLICATION_KEY
+            OVH_APPLICATION_SECRET
+            OVH_CONSUMER_KEY
+            AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY
+            CLOUDFLARE_API_TOKEN
+          )
+          for variable in "${required[@]}"; do
+            if [[ -z "${!variable:-}" ]]; then
+              echo "Missing GitHub Actions variable or secret: ${variable}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Generate production stack
+        run: nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
+
+      - name: Create storage and edge plans
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p plans
+
+          cd deploy/live/production/.terragrunt-stack/storage
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/plans/storage.txt"
+
+          cd ../edge
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/plans/edge.txt"
+
+      - name: Add plans to the workflow summary
+        shell: bash
+        run: |
+          {
+            echo '## OpenTofu production plan'
+            echo
+            echo '### Storage'
+            echo '```terraform'
+            cat plans/storage.txt
+            echo '```'
+            echo
+            echo '### Cloudflare edge'
+            echo '```terraform'
+            cat plans/edge.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reviewed plan reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-plan-${{ github.run_id }}
+          path: plans/
+          if-no-files-found: error
+          retention-days: 7
+
+  fork-safety:
+    name: Plan unavailable for fork
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Explain secret-safe behavior
+        run: echo 'Authenticated infrastructure plans are not run for fork pull requests; the credential-free checks remain in CI.'
+
+  apply:
+    name: Apply production infrastructure
+    if: github.event_name == 'push'
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment:
+      name: production-infrastructure
+    steps:
+      - name: Check out merged revision
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Download plan reports produced for this revision
+        uses: actions/download-artifact@v4
+        with:
+          name: infrastructure-plan-${{ github.run_id }}
+          path: reviewed-plans
+
+      - name: Generate production stack
+        run: nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
+
+      - name: Recreate and verify plans
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p current-plans
+
+          cd deploy/live/production/.terragrunt-stack/storage
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/current-plans/storage.txt"
+
+          cd ../edge
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/current-plans/edge.txt"
+
+          cd "$GITHUB_WORKSPACE"
+          diff -u reviewed-plans/storage.txt current-plans/storage.txt
+          diff -u reviewed-plans/edge.txt current-plans/edge.txt
+
+      - name: Apply the verified storage plan
+        working-directory: deploy/live/production/.terragrunt-stack/storage
+        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- apply -auto-approve "$PWD/tfplan"
+
+      - name: Apply the verified Cloudflare edge plan
+        working-directory: deploy/live/production/.terragrunt-stack/edge
+        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- apply -auto-approve "$PWD/tfplan"
