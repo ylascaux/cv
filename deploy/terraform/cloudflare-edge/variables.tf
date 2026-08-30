@@ -28,6 +28,17 @@ variable "origin_hostname" {
   }
 }
 
+variable "worker_name" {
+  description = "Cloudflare Worker script name used to proxy the OVHcloud static website."
+  type        = string
+  default     = "cv-ovh-static-proxy"
+
+  validation {
+    condition     = can(regex("^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", var.worker_name))
+    error_message = "worker_name must contain only lowercase letters, digits, and hyphens."
+  }
+}
+
 variable "html_edge_ttl" {
   description = "Cloudflare edge cache duration for HTML responses, in seconds."
   type        = number
