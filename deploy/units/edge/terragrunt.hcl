@@ -10,7 +10,7 @@ dependency "storage" {
   config_path = values.storage_unit_path
 
   mock_outputs = {
-    bucket_name                   = values.site_hostname
+    bucket_name                  = values.site_hostname
     cloudflare_reader_access_key = "mock-access-key"
     cloudflare_reader_secret_key = "mock-secret-key"
   }
