@@ -112,6 +112,15 @@ jobs:
           )
           exit "$failed"
 
+      - name: Scan infrastructure as code for misconfigurations
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: config
+          scan-ref: deploy
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          hide-progress: true
+
       - name: Check pinned tool versions
         run: |
           nix develop --command tofu version
