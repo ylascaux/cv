@@ -30,8 +30,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment:
-      name: preview-site
-      url: https://preview.cv.yoann-lascaux.fr
+      name: preview-infrastructure
+      url: https://preview-cv.yoann-lascaux.fr
     env:
       OVH_SITE_S3_ACCESS_KEY: ${{ secrets.OVH_SITE_S3_ACCESS_KEY }}
       OVH_SITE_S3_SECRET_KEY: ${{ secrets.OVH_SITE_S3_SECRET_KEY }}
@@ -167,7 +167,7 @@ jobs:
             "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
             --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
             --header 'Content-Type: application/json' \
-            --data "{\"hosts\":[\"preview.cv.yoann-lascaux.fr\"]}" \
+            --data "{\"hosts\":[\"preview-cv.yoann-lascaux.fr\"]}" \
             --output "$response"
           jq --exit-status '.success == true' "$response" > /dev/null
 

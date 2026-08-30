@@ -1,7 +1,7 @@
 locals {
   environment        = "preview"
-  site_hostname      = "preview.cv.yoann-lascaux.fr"
-  site_url           = "https://preview.cv.yoann-lascaux.fr"
+  site_hostname      = "preview-cv.yoann-lascaux.fr"
+  site_url           = "https://preview-cv.yoann-lascaux.fr"
   bucket_name        = "cv.yoann-lascaux.fr-preview"
   ovh_region         = "GRA"
   ovh_endpoint       = "ovh-eu"
