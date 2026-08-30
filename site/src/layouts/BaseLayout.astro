@@ -6,11 +6,20 @@ interface Props {
   locale: Locale;
   title: string;
   description: string;
+  socialImageAlt: string;
 }
 
-const { locale, title, description } = Astro.props;
+const { locale, title, description, socialImageAlt } = Astro.props;
+const siteUrl = Astro.site ?? Astro.url;
+const currentPath = locale === 'fr' ? '/' : '/en/';
 const alternateLocale = locale === 'fr' ? 'en' : 'fr';
-const alternateHref = locale === 'fr' ? '/en/' : '/';
+const alternatePath = locale === 'fr' ? '/en/' : '/';
+const canonicalUrl = new URL(currentPath, siteUrl);
+const alternateUrl = new URL(alternatePath, siteUrl);
+const defaultUrl = new URL('/', siteUrl);
+const socialImageUrl = new URL('/og-image.png', siteUrl);
+const ogLocale = locale === 'fr' ? 'fr_FR' : 'en_US';
+const alternateOgLocale = locale === 'fr' ? 'en_US' : 'fr_FR';
 ---
 
 <!doctype html>
@@ -19,11 +28,36 @@ const alternateHref = locale === 'fr' ? '/en/' : '/';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Yoann Lascaux" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={locale} href={canonicalUrl} />
+    <link rel="alternate" hreflang={alternateLocale} href={alternateUrl} />
+    <link rel="alternate" hreflang="x-default" href={defaultUrl} />
+    <link rel="sitemap" href={new URL('/sitemap.xml', siteUrl)} />
+
     <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="CV — Yoann Lascaux" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={alternateOgLocale} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:secure_url" content={socialImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={socialImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <meta name="generator" content={Astro.generator} />
     <meta id="theme-color" name="theme-color" content="#ffffff" />
     <script is:inline>
@@ -43,8 +77,6 @@ const alternateHref = locale === 'fr' ? '/en/' : '/';
       })();
     </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" hreflang={alternateLocale} href={alternateHref} />
-    <link rel="alternate" hreflang={locale} href={locale === 'fr' ? '/' : '/en/'} />
     <title>{title}</title>
   </head>
   <body>

@@ -18,19 +18,57 @@ const { cv } = Astro.props;
 const locale = cv.metadata.locale;
 const t = translations[locale];
 const homeHref = locale === 'fr' ? '/' : '/en/';
-const description = `${cv.profile.name} — ${cv.profile.title}. ${cv.profile.summary}`;
+const title = `${cv.profile.name} — ${cv.profile.title}`;
+const description = t.seoDescription;
+const siteUrl = Astro.site ?? Astro.url;
+const pageUrl = new URL(homeHref, siteUrl).href;
+const personId = `${new URL('/', siteUrl).href}#person`;
+const knowsAbout = [...new Set(cv.skills.flatMap((group) => [group.name, ...group.items.map((skill) => skill.name)]))];
+const currentExperience = cv.experiences.find((experience) => experience.endDate === null);
 const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: cv.profile.name,
-  jobTitle: cv.profile.title,
-  address: cv.profile.location,
-  email: cv.profile.email,
-  sameAs: cv.profile.links.map(({ url }: Link) => url),
+  '@graph': [
+    {
+      '@type': 'ProfilePage',
+      '@id': `${pageUrl}#profile-page`,
+      url: pageUrl,
+      name: title,
+      description,
+      inLanguage: locale,
+      dateModified: cv.metadata.lastReviewed,
+      mainEntity: { '@id': personId },
+    },
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: cv.profile.name,
+      url: pageUrl,
+      jobTitle: cv.profile.title,
+      description: cv.profile.summary,
+      email: `mailto:${cv.profile.email}`,
+      address: cv.profile.location,
+      sameAs: cv.profile.links.map(({ url }: Link) => url),
+      knowsAbout,
+      ...(currentExperience && {
+        worksFor: {
+          '@type': 'Organization',
+          name: currentExperience.organization,
+        },
+      }),
+      alumniOf: cv.education.map((education) => ({
+        '@type': 'EducationalOrganization',
+        name: education.institution,
+      })),
+      memberOf: cv.volunteering.map((entry) => ({
+        '@type': 'Organization',
+        name: entry.organization,
+      })),
+    },
+  ],
 };
 ---
 
-<BaseLayout locale={locale} title={`${cv.profile.name} — ${cv.profile.title}`} description={description}>
+<BaseLayout locale={locale} title={title} description={description} socialImageAlt={t.socialImageAlt}>
   <a class="skip-link" href="#main">{t.skip}</a>
 
   <header class="site-header">

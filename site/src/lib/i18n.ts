@@ -24,6 +24,9 @@ export const translations = {
     downloadPath: '/downloads/yoann-lascaux-cv-fr.pdf',
     enableDarkTheme: 'Activer le thème sombre',
     enableLightTheme: 'Activer le thème clair',
+    seoDescription:
+      'CV de Yoann Lascaux, Senior Platform Engineer / SRE spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
+    socialImageAlt: 'Yoann Lascaux — Senior Platform Engineer / SRE',
   },
   en: {
     skip: 'Skip to content',
@@ -48,6 +51,9 @@ export const translations = {
     downloadPath: '/downloads/yoann-lascaux-cv-en.pdf',
     enableDarkTheme: 'Enable dark theme',
     enableLightTheme: 'Enable light theme',
+    seoDescription:
+      'Resume of Yoann Lascaux, Senior Platform Engineer / SRE specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
+    socialImageAlt: 'Yoann Lascaux — Senior Platform Engineer / SRE',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
