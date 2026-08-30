@@ -10,7 +10,7 @@ dependency "storage" {
   config_path = values.storage_unit_path
 
   mock_outputs = {
-    bucket_name                  = values.site_hostname
+    bucket_name                   = values.site_hostname
     cloudflare_reader_access_key = "mock-access-key"
     cloudflare_reader_secret_key = "mock-secret-key"
   }
@@ -21,7 +21,8 @@ dependency "storage" {
 inputs = {
   zone_id         = values.cloudflare_zone_id
   hostname        = dependency.storage.outputs.bucket_name
-  origin_hostname = "${dependency.storage.outputs.bucket_name}.s3.${lower(values.ovh_region)}.io.cloud.ovh.net"
+  origin_hostname = "s3.${lower(values.ovh_region)}.io.cloud.ovh.net"
+  s3_bucket       = dependency.storage.outputs.bucket_name
   s3_region       = lower(values.ovh_region)
   s3_access_key   = dependency.storage.outputs.cloudflare_reader_access_key
   s3_secret_key   = dependency.storage.outputs.cloudflare_reader_secret_key
