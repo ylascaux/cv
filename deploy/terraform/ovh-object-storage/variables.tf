@@ -26,7 +26,7 @@ variable "region_name" {
 }
 
 variable "bucket_name" {
-  description = "Bucket name, equal to the public hostname because Cloudflare Free cannot override the origin Host header."
+  description = "Private Object Storage bucket name used as the path-style S3 origin container."
   type        = string
 
   validation {

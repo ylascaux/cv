@@ -59,11 +59,19 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Upload deployment configuration
+      - name: Upload production deployment configuration
         uses: actions/upload-artifact@v4
         with:
           name: cv-deployment-config-${{ github.sha }}
           path: deploy/live/production/env.hcl
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload preview deployment configuration
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-preview-deployment-config-${{ github.sha }}
+          path: deploy/live/preview/env.hcl
           if-no-files-found: error
           retention-days: 14
 
@@ -105,10 +113,12 @@ jobs:
           nix develop --command sh -c 'cd deploy/terraform/ovh-object-storage && tofu init -backend=false && tofu validate'
           nix develop --command sh -c 'cd deploy/terraform/cloudflare-edge && tofu init -backend=false && tofu validate'
 
-      - name: Generate and validate the production stack
+      - name: Generate and validate Terragrunt stacks
         run: |
           nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
           nix develop --command sh -c 'cd deploy/live/production/.terragrunt-stack && terragrunt hcl validate'
+          nix develop --command sh -c 'cd deploy/live/preview && terragrunt stack generate'
+          nix develop --command sh -c 'cd deploy/live/preview/.terragrunt-stack && terragrunt hcl validate'
 
       # Plans require OVHcloud and Cloudflare credentials and are reviewed
       # separately. This workflow never applies infrastructure.

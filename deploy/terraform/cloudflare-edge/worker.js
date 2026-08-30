@@ -39,6 +39,20 @@ function toObjectPath(pathname) {
   return pathname;
 }
 
+export function isClientAllowed(request, env) {
+  if (env.ACCESS_RESTRICTED !== 'true') {
+    return true;
+  }
+
+  const clientIp = request.headers.get('CF-Connecting-IP')?.trim();
+  const allowedIps = (env.ALLOWED_IPS ?? '')
+    .split(',')
+    .map((ip) => ip.trim())
+    .filter(Boolean);
+
+  return clientIp !== undefined && allowedIps.includes(clientIp);
+}
+
 export function contentTypeForPath(pathname) {
   const objectPath = toObjectPath(pathname);
   const filename = objectPath.split('/').at(-1) ?? '';
@@ -103,6 +117,15 @@ async function signedOriginRequest(method, pathname, env) {
 
 export default {
   async fetch(request, env) {
+    if (!isClientAllowed(request, env)) {
+      return new Response('Forbidden', {
+        status: 403,
+        headers: {
+          'Cache-Control': 'private, no-store',
+        },
+      });
+    }
+
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method Not Allowed', {
         status: 405,

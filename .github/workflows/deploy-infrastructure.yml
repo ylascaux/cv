@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: production-infrastructure
+  group: cv-infrastructure
   cancel-in-progress: false
 
 env:
@@ -30,10 +30,11 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.OVH_STATE_S3_ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.OVH_STATE_S3_SECRET_KEY }}
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  PREVIEW_ALLOWED_IP: ${{ vars.PREVIEW_ALLOWED_IP }}
 
 jobs:
   plan:
-    name: Plan production infrastructure
+    name: Plan production and preview infrastructure
     if: >-
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository
@@ -65,8 +66,10 @@ jobs:
             fi
           done
 
-      - name: Generate production stack
-        run: nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
+      - name: Generate Terragrunt stacks
+        run: |
+          nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
+          nix develop --command sh -c 'cd deploy/live/preview && terragrunt stack generate'
 
       - name: Plan production infrastructure
         working-directory: deploy/live/production/.terragrunt-stack
@@ -75,6 +78,23 @@ jobs:
           set -euo pipefail
           {
             echo '## OpenTofu production plan'
+            echo
+            echo '```terraform'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          nix develop "$GITHUB_WORKSPACE" --command \
+            terragrunt --no-color run --all -- plan -input=false -no-color 2>&1 \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Plan preview infrastructure
+        working-directory: deploy/live/preview/.terragrunt-stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo '## OpenTofu preview plan'
             echo
             echo '```terraform'
           } >> "$GITHUB_STEP_SUMMARY"
@@ -123,4 +143,45 @@ jobs:
 
       - name: Apply production infrastructure
         working-directory: deploy/live/production/.terragrunt-stack
+        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt --non-interactive run --all -- apply -auto-approve -input=false
+
+  apply-preview:
+    name: Apply preview infrastructure
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment:
+      name: preview-infrastructure
+    steps:
+      - name: Check out merged revision
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Check required configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            OVH_APPLICATION_KEY
+            OVH_APPLICATION_SECRET
+            OVH_CONSUMER_KEY
+            AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY
+            CLOUDFLARE_API_TOKEN
+            PREVIEW_ALLOWED_IP
+          )
+          for variable in "${required[@]}"; do
+            if [[ -z "${!variable:-}" ]]; then
+              echo "Missing GitHub Actions variable or secret: ${variable}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Generate preview stack
+        run: nix develop --command sh -c 'cd deploy/live/preview && terragrunt stack generate'
+
+      - name: Apply preview infrastructure
+        working-directory: deploy/live/preview/.terragrunt-stack
         run: nix develop "$GITHUB_WORKSPACE" --command terragrunt --non-interactive run --all -- apply -auto-approve -input=false

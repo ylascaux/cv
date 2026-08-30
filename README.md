@@ -117,3 +117,10 @@ produit dans `dist/` :
 - `dist/downloads/yoann-lascaux-cv-en.pdf`.
 
 Les fichiers de `dist/` sont générés et ne doivent pas être modifiés à la main ni versionnés.
+
+## Environnements déployés
+
+| Environnement | URL                                   | Bucket OVHcloud               | Publication                                 |
+| ------------- | ------------------------------------- | ----------------------------- | ------------------------------------------- |
+| Production    | <https://cv.yoann-lascaux.fr>         | `cv.yoann-lascaux.fr`         | automatique après une CI réussie sur `main` |
+| Preview       | <https://preview.cv.yoann-lascaux.fr> | `cv.yoann-lascaux.fr-preview` | workflow manuel `Preview site deployment`   |
