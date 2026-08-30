@@ -1,3 +1,7 @@
+data "cloudflare_zone" "site" {
+  zone_id = var.zone_id
+}
+
 locals {
   hostname        = trimsuffix(lower(trimspace(var.hostname)), ".")
   origin_hostname = trimsuffix(lower(trimspace(var.origin_hostname)), ".")
@@ -18,6 +22,27 @@ resource "cloudflare_dns_record" "site" {
   proxied = true
   ttl     = 1
   comment = "OVHcloud Object Storage static website, managed by OpenTofu"
+}
+
+resource "cloudflare_workers_script" "static_proxy" {
+  account_id      = data.cloudflare_zone.site.account.id
+  script_name     = var.worker_name
+  content_file    = "${path.module}/worker.js"
+  content_sha256  = filesha256("${path.module}/worker.js")
+  main_module     = "worker.js"
+  compatibility_date = "2026-08-30"
+
+  bindings = [{
+    name = "ORIGIN_HOSTNAME"
+    type = "plain_text"
+    text = local.origin_hostname
+  }]
+}
+
+resource "cloudflare_workers_route" "site" {
+  zone_id = var.zone_id
+  pattern = "${local.hostname}/*"
+  script  = cloudflare_workers_script.static_proxy.script_name
 }
 
 resource "cloudflare_ruleset" "origin_ssl" {
