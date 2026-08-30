@@ -75,12 +75,12 @@ jobs:
           mkdir -p plans
 
           cd deploy/live/production/.terragrunt-stack/storage
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out=tfplan
-          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color tfplan > "$GITHUB_WORKSPACE/plans/storage.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/plans/storage.txt"
 
           cd ../edge
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out=tfplan
-          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color tfplan > "$GITHUB_WORKSPACE/plans/edge.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/plans/edge.txt"
 
       - name: Add plans to the workflow summary
         shell: bash
@@ -148,12 +148,12 @@ jobs:
           mkdir -p current-plans
 
           cd deploy/live/production/.terragrunt-stack/storage
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out=tfplan
-          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color tfplan > "$GITHUB_WORKSPACE/current-plans/storage.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/current-plans/storage.txt"
 
           cd ../edge
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out=tfplan
-          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color tfplan > "$GITHUB_WORKSPACE/current-plans/edge.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
+          nix develop "$GITHUB_WORKSPACE" --command tofu show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/current-plans/edge.txt"
 
           cd "$GITHUB_WORKSPACE"
           diff -u reviewed-plans/storage.txt current-plans/storage.txt
@@ -161,8 +161,8 @@ jobs:
 
       - name: Apply the verified storage plan
         working-directory: deploy/live/production/.terragrunt-stack/storage
-        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- apply -auto-approve tfplan
+        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- apply -auto-approve "$PWD/tfplan"
 
       - name: Apply the verified Cloudflare edge plan
         working-directory: deploy/live/production/.terragrunt-stack/edge
-        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- apply -auto-approve tfplan
+        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- apply -auto-approve "$PWD/tfplan"
