@@ -1,5 +1,26 @@
 const encoder = new TextEncoder();
 const EMPTY_SHA256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+const CONTENT_TYPES = {
+  '.css': 'text/css; charset=utf-8',
+  '.gif': 'image/gif',
+  '.html': 'text/html; charset=utf-8',
+  '.ico': 'image/x-icon',
+  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.otf': 'font/otf',
+  '.pdf': 'application/pdf',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.ttf': 'font/ttf',
+  '.txt': 'text/plain; charset=utf-8',
+  '.webp': 'image/webp',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.xml': 'application/xml; charset=utf-8',
+};
 
 function toObjectPath(pathname) {
   if (pathname === '/') {
@@ -16,6 +37,15 @@ function toObjectPath(pathname) {
   }
 
   return pathname;
+}
+
+export function contentTypeForPath(pathname) {
+  const objectPath = toObjectPath(pathname);
+  const filename = objectPath.split('/').at(-1) ?? '';
+  const extensionIndex = filename.lastIndexOf('.');
+  const extension = extensionIndex === -1 ? '' : filename.slice(extensionIndex).toLowerCase();
+
+  return CONTENT_TYPES[extension] ?? 'application/octet-stream';
 }
 
 function toHex(buffer) {
@@ -84,6 +114,14 @@ export default {
 
     const incomingUrl = new URL(request.url);
     const originRequest = await signedOriginRequest(request.method, incomingUrl.pathname, env);
-    return fetch(originRequest);
+    const originResponse = await fetch(originRequest);
+    const headers = new Headers(originResponse.headers);
+    headers.set('Content-Type', contentTypeForPath(incomingUrl.pathname));
+
+    return new Response(originResponse.body, {
+      status: originResponse.status,
+      statusText: originResponse.statusText,
+      headers,
+    });
   },
 };
