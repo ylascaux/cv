@@ -14,6 +14,7 @@ const pages = [
     download: '/downloads/yoann-lascaux-cv-fr.pdf',
     enableDarkTheme: 'Activer le thème sombre',
     enableLightTheme: 'Activer le thème clair',
+    sourceLabel: 'Code source & infrastructure sur GitHub',
     canonical: 'https://cv.yoann-lascaux.fr/',
     alternate: 'https://cv.yoann-lascaux.fr/en/',
     seoDescription:
@@ -31,6 +32,7 @@ const pages = [
     download: '/downloads/yoann-lascaux-cv-en.pdf',
     enableDarkTheme: 'Enable dark theme',
     enableLightTheme: 'Enable light theme',
+    sourceLabel: 'Source code & infrastructure on GitHub',
     canonical: 'https://cv.yoann-lascaux.fr/en/',
     alternate: 'https://cv.yoann-lascaux.fr/',
     seoDescription:
@@ -103,7 +105,14 @@ for (const cv of pages) {
       'href',
       'https://www.linkedin.com/in/yoann-lascaux/',
     );
-    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/ylascaux');
+    await expect(page.getByRole('link', { name: 'GitHub', exact: true })).toHaveAttribute(
+      'href',
+      'https://github.com/ylascaux',
+    );
+    await expect(page.getByRole('link', { name: cv.sourceLabel, exact: true })).toHaveAttribute(
+      'href',
+      'https://github.com/ylascaux/cv',
+    );
     await expect(page.getByTestId('download-pdf')).toBeVisible();
     await expect(page.getByTestId('download-pdf')).toHaveAttribute('href', cv.download);
     expect(errors).toEqual([]);

@@ -83,7 +83,7 @@ const sourceLabel =
   </head>
   <body>
     <slot />
-    <footer class="source-footer">
+    <aside class="source-footer" aria-label={sourceLabel}>
       <a href="https://github.com/ylascaux/cv" target="_blank" rel="noreferrer">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path
@@ -93,7 +93,7 @@ const sourceLabel =
         </svg>
         <span>{sourceLabel}</span>
       </a>
-    </footer>
+    </aside>
   </body>
 </html>
 
