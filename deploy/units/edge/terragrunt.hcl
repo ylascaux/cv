@@ -16,7 +16,7 @@ dependency "storage" {
   }
 
   mock_outputs_allowed_terraform_commands = ["validate", "plan"]
-  mock_outputs_merge_strategy_with_state = "shallow"
+  mock_outputs_merge_strategy_with_state  = "shallow"
 }
 
 inputs = {
@@ -25,8 +25,8 @@ inputs = {
   origin_hostname = "s3.${lower(values.ovh_region)}.io.cloud.ovh.net"
   s3_bucket       = dependency.storage.outputs.bucket_name
   s3_region       = lower(values.ovh_region)
-  s3_access_key   = dependency.storage.outputs.cloudflare_reader_access_key
-  s3_secret_key   = dependency.storage.outputs.cloudflare_reader_secret_key
+  s3_access_key   = try(dependency.storage.outputs.cloudflare_reader_access_key, "mock-access-key")
+  s3_secret_key   = try(dependency.storage.outputs.cloudflare_reader_secret_key, "mock-secret-key")
   html_edge_ttl   = values.html_edge_ttl
   asset_edge_ttl  = values.asset_edge_ttl
 }
