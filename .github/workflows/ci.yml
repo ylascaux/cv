@@ -95,6 +95,23 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
 
+      - name: Check GitHub Actions are pinned by SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          while IFS= read -r action; do
+            ref="${action##*@}"
+            if [[ ! "$ref" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "GitHub Action is not pinned to a full commit SHA: $action" >&2
+              failed=1
+            fi
+          done < <(
+            grep -RhE '^[[:space:]]*uses:[[:space:]]*[^[:space:]#]+' .github/workflows \
+              | sed -E 's/^[[:space:]]*uses:[[:space:]]*([^[:space:]#]+).*/\1/'
+          )
+          exit "$failed"
+
       - name: Check pinned tool versions
         run: |
           nix develop --command tofu version
