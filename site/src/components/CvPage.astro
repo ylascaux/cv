@@ -25,6 +25,10 @@ const pageUrl = new URL(homeHref, siteUrl).href;
 const personId = `${new URL('/', siteUrl).href}#person`;
 const knowsAbout = [...new Set(cv.skills.flatMap((group) => [group.name, ...group.items.map((skill) => skill.name)]))];
 const currentExperience = cv.experiences.find((experience) => experience.endDate === null);
+const iconForLink = ({ label }: Link) => {
+  const icon = label.toLowerCase();
+  return icon === 'linkedin' || icon === 'github' ? icon : 'link';
+};
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -108,7 +112,7 @@ const structuredData = {
           {
             cv.profile.links.map((link: Link) => (
               <li>
-                <Icon class="detail-icon" name={link.label.toLowerCase() === 'linkedin' ? 'linkedin' : 'link'} />
+                <Icon class="detail-icon" name={iconForLink(link)} />
                 <a href={link.url} target="_blank" rel="noreferrer">
                   {link.label}
                 </a>
