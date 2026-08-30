@@ -182,21 +182,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error \
-            --retry 5 \
-            --retry-delay 5 \
-            --retry-all-errors \
-            "${SITE_URL}/" > /dev/null
-          curl --fail --silent --show-error \
-            --retry 5 \
-            --retry-delay 5 \
-            --retry-all-errors \
-            "${SITE_URL}/en/" > /dev/null
-          curl --fail --silent --show-error \
-            --retry 5 \
-            --retry-delay 5 \
-            --retry-all-errors \
-            "${SITE_URL}/sitemap.xml" > /dev/null
+          # Signed reads can temporarily return 403 while OVH propagates object writes.
+          for path in / /en/ /sitemap.xml; do
+            curl --fail --silent --show-error \
+              --retry 24 \
+              --retry-delay 5 \
+              --retry-max-time 120 \
+              --retry-all-errors \
+              "${SITE_URL}${path}" > /dev/null
+          done
 
       - name: Record deployed revision
         run: echo "Published immutable artifact for \`${DEPLOY_SHA}\` from CI run \`${DEPLOY_RUN_ID}\`." >> "$GITHUB_STEP_SUMMARY"
