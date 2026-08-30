@@ -123,4 +123,4 @@ jobs:
 
       - name: Apply production infrastructure
         working-directory: deploy/live/production/.terragrunt-stack
-        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt run --all -- apply -auto-approve -input=false
+        run: nix develop "$GITHUB_WORKSPACE" --command terragrunt --non-interactive run --all -- apply -auto-approve -input=false
