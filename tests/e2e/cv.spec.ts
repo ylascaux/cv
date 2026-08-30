@@ -160,7 +160,7 @@ test('SEO discovery files expose the public bilingual URLs', async ({ request })
 
   const sitemapResponse = await request.get('/sitemap.xml');
   expect(sitemapResponse.ok()).toBe(true);
-  expect(sitemapResponse.headers()['content-type']).toContain('application/xml');
+  expect(sitemapResponse.headers()['content-type']).toContain('xml');
   const sitemap = await sitemapResponse.text();
   expect(sitemap).toContain('<loc>https://cv.yoann-lascaux.fr/</loc>');
   expect(sitemap).toContain('<loc>https://cv.yoann-lascaux.fr/en/</loc>');

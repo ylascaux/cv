@@ -68,6 +68,47 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  infrastructure:
+    name: OpenTofu and Terragrunt
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      # Parsing the stack requires a bucket name, but CI never initializes the
+      # remote backend and never receives storage credentials.
+      TG_STATE_BUCKET: ci-state-backend-not-used
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Check pinned tool versions
+        run: |
+          nix develop --command tofu version
+          nix develop --command terragrunt --version
+
+      - name: Check GitHub Actions workflows
+        run: nix develop --command actionlint
+
+      - name: Check OpenTofu and Terragrunt formatting
+        run: |
+          nix develop --command tofu fmt -check -recursive deploy/terraform
+          nix develop --command terragrunt hcl fmt --check
+
+      - name: Validate OpenTofu modules
+        run: |
+          nix develop --command sh -c 'cd deploy/terraform/ovh-object-storage && tofu init -backend=false && tofu validate'
+          nix develop --command sh -c 'cd deploy/terraform/cloudflare-edge && tofu init -backend=false && tofu validate'
+
+      - name: Generate and validate the production stack
+        run: |
+          nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
+          nix develop --command sh -c 'cd deploy/live/production/.terragrunt-stack && terragrunt hcl validate'
+
+      # Plans require OVHcloud and Cloudflare credentials and are reviewed
+      # separately. This workflow never applies infrastructure.
+
   docker:
     name: Docker image — ${{ matrix.name }}
     runs-on: ubuntu-24.04

@@ -36,8 +36,10 @@ jobs:
     name: Publish validated artifact
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main')
+      (github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment:
@@ -48,13 +50,10 @@ jobs:
       OVH_SITE_S3_SECRET_KEY: ${{ secrets.OVH_SITE_S3_SECRET_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
-      - name: Check out deployment tooling
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ env.DEPLOY_SHA }}
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v20
+      - name: Install deployment tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes jq s3cmd
 
       - name: Check required configuration
         shell: bash
@@ -123,7 +122,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          nix develop --command s3cmd \
+          s3cmd \
             --config="$RUNNER_TEMP/s3cfg" \
             sync \
             --delete-removed \
@@ -144,7 +143,7 @@ jobs:
             --header 'Content-Type: application/json' \
             --data "{\"hosts\":[\"${OVH_SITE_BUCKET}\"]}" \
             --output "$response"
-          nix develop --command jq --exit-status '.success == true' "$response" > /dev/null
+          jq --exit-status '.success == true' "$response" > /dev/null
 
       - name: Verify public deployment
         shell: bash
