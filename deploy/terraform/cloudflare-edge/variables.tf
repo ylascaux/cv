@@ -19,12 +19,22 @@ variable "hostname" {
 }
 
 variable "origin_hostname" {
-  description = "OVHcloud Object Storage S3 API virtual-host endpoint without a scheme."
+  description = "OVHcloud Object Storage S3 API endpoint without a scheme."
   type        = string
 
   validation {
-    condition     = can(regex("^[a-z0-9.-]+\\.s3\\.[a-z0-9-]+\\.io\\.cloud\\.ovh\\.net$", var.origin_hostname))
-    error_message = "origin_hostname must be an OVHcloud S3 API virtual-host endpoint."
+    condition     = can(regex("^s3\\.[a-z0-9-]+\\.io\\.cloud\\.ovh\\.net$", var.origin_hostname))
+    error_message = "origin_hostname must be an OVHcloud regional S3 API endpoint."
+  }
+}
+
+variable "s3_bucket" {
+  description = "Private OVHcloud Object Storage bucket read by the Worker."
+  type        = string
+
+  validation {
+    condition     = can(regex("^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$", var.s3_bucket))
+    error_message = "s3_bucket must be a valid lowercase S3 bucket name."
   }
 }
 
