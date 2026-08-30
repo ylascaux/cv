@@ -186,6 +186,8 @@ La stack `deploy/live/production/terragrunt.stack.hcl` décrit :
 - le mode Flexible limité au hostname du CV ;
 - les règles de cache et les en-têtes de sécurité Cloudflare.
 
+Le bucket du site ayant été créé par OVHcloud malgré une réponse HTTP 500, `import_existing = true` active temporairement sa réconciliation déclarative avec l’identifiant `fe3a7d65b6a54eeda23015c1c64060d8/GRA/cv.yoann-lascaux.fr`. Après un apply CI réussi et la vérification de l’état, retirer ce flag puis confirmer que le plan suivant ne contient aucun changement.
+
 Pour générer et contrôler la stack sans accès distant :
 
 ```shell

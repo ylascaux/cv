@@ -35,6 +35,12 @@ variable "bucket_name" {
   }
 }
 
+variable "import_existing" {
+  description = "Import the bucket before managing it. Enable only to reconcile a bucket created outside OpenTofu."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags applied to the OVHcloud storage container."
   type        = map(string)

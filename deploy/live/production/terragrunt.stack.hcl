@@ -11,6 +11,7 @@ unit "storage" {
     ovh_endpoint     = local.environment.ovh_endpoint
     ovh_region       = local.environment.ovh_region
     ovh_service_name = local.environment.ovh_service_name
+    import_existing  = true
     tags = {
       Environment = local.environment.environment
       ManagedBy   = "OpenTofu"
