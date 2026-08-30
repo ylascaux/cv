@@ -4,6 +4,14 @@ Site statique bilingue du CV de Yoann Lascaux. Le contenu éditorial est stocké
 
 Le dépôt contient le contenu du CV, le site, les contrôles de qualité, les images Docker et l’infrastructure OpenTofu/Terragrunt destinée à sa publication sur OVHcloud Object Storage derrière Cloudflare.
 
+## Transparence sur l’utilisation de l’IA
+
+La partie applicative et JavaScript de ce projet a été réalisée avec l’assistance d’outils d’intelligence artificielle.
+
+La conception de l’architecture, l’infrastructure as code OpenTofu/Terragrunt, les workflows GitHub Actions, la chaîne CI/CD, le durcissement sécurité, les choix d’hébergement et les décisions opérationnelles ont été conçus et implémentés par Yoann Lascaux.
+
+L’IA est utilisée ici comme outil d’assistance à l’implémentation, tandis que les choix d’architecture, de sécurité, d’exploitation et de plateforme restent sous responsabilité humaine.
+
 ## Fonctionnalités
 
 - versions française (`/`) et anglaise (`/en/`) générées depuis un modèle commun ;
