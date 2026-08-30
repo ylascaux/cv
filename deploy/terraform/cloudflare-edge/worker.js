@@ -28,9 +28,13 @@ async function sha256(value) {
 
 async function hmac(key, value) {
   const rawKey = typeof key === 'string' ? encoder.encode(key) : key;
-  const cryptoKey = await crypto.subtle.importKey('raw', rawKey, { name: 'HMAC', hash: 'SHA-256' }, false, [
-    'sign',
-  ]);
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    rawKey,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
   return crypto.subtle.sign('HMAC', cryptoKey, encoder.encode(value));
 }
 
