@@ -21,7 +21,7 @@ resource "cloudflare_dns_record" "site" {
   content = local.origin_hostname
   proxied = true
   ttl     = 1
-  comment = "OVHcloud Object Storage static website, managed by OpenTofu"
+  comment = "Private OVHcloud Object Storage origin behind Cloudflare Worker, managed by OpenTofu"
 }
 
 resource "cloudflare_workers_script" "static_proxy" {
@@ -32,36 +32,34 @@ resource "cloudflare_workers_script" "static_proxy" {
   main_module        = "worker.js"
   compatibility_date = "2026-08-30"
 
-  bindings = [{
-    name = "ORIGIN_HOSTNAME"
-    type = "plain_text"
-    text = local.origin_hostname
-  }]
+  bindings = [
+    {
+      name = "ORIGIN_HOSTNAME"
+      type = "plain_text"
+      text = local.origin_hostname
+    },
+    {
+      name = "S3_REGION"
+      type = "plain_text"
+      text = var.s3_region
+    },
+    {
+      name = "S3_ACCESS_KEY"
+      type = "secret_text"
+      text = var.s3_access_key
+    },
+    {
+      name = "S3_SECRET_KEY"
+      type = "secret_text"
+      text = var.s3_secret_key
+    },
+  ]
 }
 
 resource "cloudflare_workers_route" "site" {
   zone_id = var.zone_id
   pattern = "${local.hostname}/*"
   script  = cloudflare_workers_script.static_proxy.script_name
-}
-
-resource "cloudflare_ruleset" "origin_ssl" {
-  zone_id     = var.zone_id
-  name        = "CV origin TLS mode"
-  description = "Use HTTP between Cloudflare and the OVHcloud website endpoint"
-  kind        = "zone"
-  phase       = "http_config_settings"
-
-  rules = [{
-    ref         = "cv_origin_flexible_ssl"
-    description = "Flexible SSL only for ${local.hostname}"
-    expression  = local.host_expression
-    action      = "set_config"
-    enabled     = true
-    action_parameters = {
-      ssl = "flexible"
-    }
-  }]
 }
 
 resource "cloudflare_ruleset" "cache" {
