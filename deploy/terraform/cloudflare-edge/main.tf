@@ -25,11 +25,11 @@ resource "cloudflare_dns_record" "site" {
 }
 
 resource "cloudflare_workers_script" "static_proxy" {
-  account_id      = data.cloudflare_zone.site.account.id
-  script_name     = var.worker_name
-  content_file    = "${path.module}/worker.js"
-  content_sha256  = filesha256("${path.module}/worker.js")
-  main_module     = "worker.js"
+  account_id         = data.cloudflare_zone.site.account.id
+  script_name        = var.worker_name
+  content_file       = "${path.module}/worker.js"
+  content_sha256     = filesha256("${path.module}/worker.js")
+  main_module        = "worker.js"
   compatibility_date = "2026-08-30"
 
   bindings = [{
