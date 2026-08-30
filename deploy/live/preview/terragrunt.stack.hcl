@@ -11,7 +11,7 @@ unit "storage" {
     ovh_endpoint     = local.environment.ovh_endpoint
     ovh_region       = local.environment.ovh_region
     ovh_service_name = local.environment.ovh_service_name
-    import_existing  = true
+    import_existing  = false
     tags = {
       Environment = local.environment.environment
       ManagedBy   = "OpenTofu"
@@ -30,9 +30,9 @@ unit "edge" {
     ovh_region           = local.environment.ovh_region
     cloudflare_zone_id   = local.environment.cloudflare_zone_id
     worker_name          = local.environment.worker_name
-    access_restricted    = false
-    allowed_ips          = []
-    manage_zone_rulesets = true
+    access_restricted    = true
+    allowed_ips          = local.environment.allowed_ips
+    manage_zone_rulesets = false
     html_edge_ttl        = local.environment.html_edge_ttl
     asset_edge_ttl       = local.environment.asset_edge_ttl
     storage_unit_path    = unit.storage.path

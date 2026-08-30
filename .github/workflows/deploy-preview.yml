@@ -1,9 +1,6 @@
-name: Static site deployment
+name: Preview site deployment
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
   workflow_dispatch:
     inputs:
       artifact_run_id:
@@ -20,27 +17,21 @@ permissions:
   contents: read
 
 concurrency:
-  group: production-site
+  group: preview-site
   cancel-in-progress: false
 
 env:
-  DEPLOY_RUN_ID: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || inputs.artifact_run_id }}
-  DEPLOY_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.revision }}
+  DEPLOY_RUN_ID: ${{ inputs.artifact_run_id }}
+  DEPLOY_SHA: ${{ inputs.revision }}
 
 jobs:
   deploy:
-    name: Publish validated artifact
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main' &&
-      github.event.workflow_run.head_repository.full_name == github.repository)
+    name: Publish validated artifact to preview
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment:
-      name: production-site
-      url: https://cv.yoann-lascaux.fr
+      name: preview-site
+      url: https://preview.cv.yoann-lascaux.fr
     env:
       OVH_SITE_S3_ACCESS_KEY: ${{ secrets.OVH_SITE_S3_ACCESS_KEY }}
       OVH_SITE_S3_SECRET_KEY: ${{ secrets.OVH_SITE_S3_SECRET_KEY }}
@@ -58,10 +49,10 @@ jobs:
           echo 'a2640da8455fa5f3671167e6373832b0907b9dc972dd01c2093cc7808934e158  '"$RUNNER_TEMP/terragrunt" | sha256sum --check
           sudo install --mode=0755 "$RUNNER_TEMP/terragrunt" /usr/local/bin/terragrunt
 
-      - name: Download immutable deployment configuration
-        uses: actions/download-artifact@v8
+      - name: Download immutable preview configuration
+        uses: actions/download-artifact@v4
         with:
-          name: cv-deployment-config-${{ env.DEPLOY_SHA }}
+          name: cv-preview-deployment-config-${{ env.DEPLOY_SHA }}
           path: deployment-config
           github-token: ${{ github.token }}
           run-id: ${{ env.DEPLOY_RUN_ID }}
@@ -76,14 +67,15 @@ jobs:
             --config deployment-config/env.hcl \
             > "$rendered"
 
+          jq --exit-status '.locals.environment == "preview"' "$rendered" > /dev/null
           jq --exit-status '.locals.ovh_region | strings | test("^[A-Z0-9-]+$")' "$rendered" > /dev/null
-          jq --exit-status '.locals.site_hostname | strings | test("^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.bucket_name | strings | test("^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
           jq --exit-status '.locals.site_url | strings | test("^https://[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
           jq --exit-status '.locals.cloudflare_zone_id | strings | test("^[0-9a-f]{32}$")' "$rendered" > /dev/null
 
           {
             echo "OVH_REGION=$(jq --raw-output '.locals.ovh_region' "$rendered")"
-            echo "OVH_SITE_BUCKET=$(jq --raw-output '.locals.site_hostname' "$rendered")"
+            echo "OVH_SITE_BUCKET=$(jq --raw-output '.locals.bucket_name' "$rendered")"
             echo "SITE_URL=$(jq --raw-output '.locals.site_url' "$rendered")"
             echo "CLOUDFLARE_ZONE_ID=$(jq --raw-output '.locals.cloudflare_zone_id' "$rendered")"
           } >> "$GITHUB_ENV"
@@ -97,6 +89,7 @@ jobs:
             DEPLOY_SHA
             OVH_REGION
             OVH_SITE_BUCKET
+            SITE_URL
             CLOUDFLARE_ZONE_ID
             OVH_SITE_S3_ACCESS_KEY
             OVH_SITE_S3_SECRET_KEY
@@ -110,7 +103,7 @@ jobs:
           done
 
       - name: Download immutable CI artifact
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: cv-static-${{ env.DEPLOY_SHA }}
           path: dist
@@ -151,7 +144,7 @@ jobs:
           EOF
           chmod 600 "$RUNNER_TEMP/s3cfg"
 
-      - name: Publish site to private OVHcloud Object Storage
+      - name: Publish site to private preview bucket
         shell: bash
         run: |
           set -euo pipefail
@@ -164,7 +157,7 @@ jobs:
             dist/ \
             "s3://${OVH_SITE_BUCKET}/"
 
-      - name: Purge the Cloudflare cache for the site
+      - name: Purge the Cloudflare cache for preview
         shell: bash
         run: |
           set -euo pipefail
@@ -174,9 +167,19 @@ jobs:
             "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
             --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
             --header 'Content-Type: application/json' \
-            --data "{\"hosts\":[\"${OVH_SITE_BUCKET}\"]}" \
+            --data "{\"hosts\":[\"preview.cv.yoann-lascaux.fr\"]}" \
             --output "$response"
           jq --exit-status '.success == true' "$response" > /dev/null
 
+      - name: Verify preview remains IP restricted
+        shell: bash
+        run: |
+          set -euo pipefail
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "${SITE_URL}/")
+          if [[ "$status" != '403' ]]; then
+            echo "Expected the preview URL to reject this GitHub runner with HTTP 403, got ${status}." >&2
+            exit 1
+          fi
+
       - name: Record deployed revision
-        run: echo "Published immutable artifact for \`${DEPLOY_SHA}\` from CI run \`${DEPLOY_RUN_ID}\`." >> "$GITHUB_STEP_SUMMARY"
+        run: echo "Published preview artifact for \`${DEPLOY_SHA}\` from CI run \`${DEPLOY_RUN_ID}\`." >> "$GITHUB_STEP_SUMMARY"

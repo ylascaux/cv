@@ -71,6 +71,29 @@ variable "worker_name" {
   }
 }
 
+variable "access_restricted" {
+  description = "Whether the Worker only serves requests from allowed_ips. An empty allowlist denies all access when enabled."
+  type        = bool
+  default     = false
+}
+
+variable "allowed_ips" {
+  description = "Exact client IPv4 or IPv6 addresses allowed when access_restricted is enabled."
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition     = alltrue([for ip in var.allowed_ips : can(cidrnetmask("${ip}/32")) || can(cidrhost("${ip}/128", 0))])
+    error_message = "allowed_ips must contain valid IPv4 or IPv6 addresses without CIDR suffixes."
+  }
+}
+
+variable "manage_zone_rulesets" {
+  description = "Whether this module owns the zone-level cache and security-header rulesets. Only one stack per zone may enable it."
+  type        = bool
+  default     = true
+}
+
 variable "html_edge_ttl" {
   description = "Cloudflare edge cache duration for HTML responses, in seconds."
   type        = number

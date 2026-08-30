@@ -58,6 +58,16 @@ resource "cloudflare_workers_script" "static_proxy" {
       type = "secret_text"
       text = var.s3_secret_key
     },
+    {
+      name = "ACCESS_RESTRICTED"
+      type = "plain_text"
+      text = tostring(var.access_restricted)
+    },
+    {
+      name = "ALLOWED_IPS"
+      type = "plain_text"
+      text = join(",", var.allowed_ips)
+    },
   ]
 }
 
@@ -67,7 +77,19 @@ resource "cloudflare_workers_route" "site" {
   script  = cloudflare_workers_script.static_proxy.script_name
 }
 
+moved {
+  from = cloudflare_ruleset.cache
+  to   = cloudflare_ruleset.cache["managed"]
+}
+
+moved {
+  from = cloudflare_ruleset.security_headers
+  to   = cloudflare_ruleset.security_headers["managed"]
+}
+
 resource "cloudflare_ruleset" "cache" {
+  for_each = var.manage_zone_rulesets ? toset(["managed"]) : toset([])
+
   zone_id     = var.zone_id
   name        = "CV static cache"
   description = "Cache the generated CV while keeping HTML releases responsive"
@@ -113,6 +135,8 @@ resource "cloudflare_ruleset" "cache" {
 }
 
 resource "cloudflare_ruleset" "security_headers" {
+  for_each = var.manage_zone_rulesets ? toset(["managed"]) : toset([])
+
   zone_id     = var.zone_id
   name        = "CV security headers"
   description = "Security headers added at the Cloudflare edge"
