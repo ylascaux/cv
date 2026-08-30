@@ -28,7 +28,9 @@ async function sha256(value) {
 
 async function hmac(key, value) {
   const rawKey = typeof key === 'string' ? encoder.encode(key) : key;
-  const cryptoKey = await crypto.subtle.importKey('raw', rawKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const cryptoKey = await crypto.subtle.importKey('raw', rawKey, { name: 'HMAC', hash: 'SHA-256' }, false, [
+    'sign',
+  ]);
   return crypto.subtle.sign('HMAC', cryptoKey, encoder.encode(value));
 }
 
@@ -44,14 +46,7 @@ async function signedOriginRequest(method, pathname, env) {
     `x-amz-content-sha256:${EMPTY_SHA256}\n` +
     `x-amz-date:${amzDate}\n`;
 
-  const canonicalRequest = [
-    method,
-    canonicalUri,
-    '',
-    canonicalHeaders,
-    signedHeaders,
-    EMPTY_SHA256,
-  ].join('\n');
+  const canonicalRequest = [method, canonicalUri, '', canonicalHeaders, signedHeaders, EMPTY_SHA256].join('\n');
 
   const credentialScope = `${dateStamp}/${env.S3_REGION}/s3/aws4_request`;
   const canonicalRequestHash = toHex(await sha256(canonicalRequest));
