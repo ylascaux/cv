@@ -52,10 +52,18 @@ jobs:
         run: npm audit --omit=dev --audit-level=moderate
 
       - name: Upload static artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@v4
         with:
           name: cv-static-${{ github.sha }}
           path: dist/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload deployment configuration
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-deployment-config-${{ github.sha }}
+          path: deploy/live/production/env.hcl
           if-no-files-found: error
           retention-days: 14
 
@@ -67,6 +75,43 @@ jobs:
           path: playwright-report/
           if-no-files-found: ignore
           retention-days: 7
+
+  infrastructure:
+    name: OpenTofu and Terragrunt
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Check pinned tool versions
+        run: |
+          nix develop --command tofu version
+          nix develop --command terragrunt --version
+
+      - name: Check GitHub Actions workflows
+        run: nix develop --command actionlint
+
+      - name: Check OpenTofu and Terragrunt formatting
+        run: |
+          nix develop --command tofu fmt -check -recursive deploy/terraform
+          nix develop --command terragrunt hcl fmt --check
+
+      - name: Validate OpenTofu modules
+        run: |
+          nix develop --command sh -c 'cd deploy/terraform/ovh-object-storage && tofu init -backend=false && tofu validate'
+          nix develop --command sh -c 'cd deploy/terraform/cloudflare-edge && tofu init -backend=false && tofu validate'
+
+      - name: Generate and validate the production stack
+        run: |
+          nix develop --command sh -c 'cd deploy/live/production && terragrunt stack generate'
+          nix develop --command sh -c 'cd deploy/live/production/.terragrunt-stack && terragrunt hcl validate'
+
+      # Plans require OVHcloud and Cloudflare credentials and are reviewed
+      # separately. This workflow never applies infrastructure.
 
   docker:
     name: Docker image — ${{ matrix.name }}

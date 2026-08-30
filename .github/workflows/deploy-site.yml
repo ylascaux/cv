@@ -1,0 +1,202 @@
+name: Static site deployment
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      artifact_run_id:
+        description: GitHub Actions run ID containing the immutable CI artifact
+        required: true
+        type: string
+      revision:
+        description: Commit SHA represented by the artifact
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: production-site
+  cancel-in-progress: false
+
+env:
+  DEPLOY_RUN_ID: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || inputs.artifact_run_id }}
+  DEPLOY_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.revision }}
+
+jobs:
+  deploy:
+    name: Publish validated artifact
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment:
+      name: production-site
+      url: https://cv.yoann-lascaux.fr
+    env:
+      OVH_SITE_S3_ACCESS_KEY: ${{ secrets.OVH_SITE_S3_ACCESS_KEY }}
+      OVH_SITE_S3_SECRET_KEY: ${{ secrets.OVH_SITE_S3_SECRET_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Install deployment tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes jq s3cmd
+          curl --fail --location --silent --show-error \
+            --output "$RUNNER_TEMP/terragrunt" \
+            https://github.com/gruntwork-io/terragrunt/releases/download/v1.1.4/terragrunt_linux_amd64
+          echo 'a2640da8455fa5f3671167e6373832b0907b9dc972dd01c2093cc7808934e158  '"$RUNNER_TEMP/terragrunt" | sha256sum --check
+          sudo install --mode=0755 "$RUNNER_TEMP/terragrunt" /usr/local/bin/terragrunt
+
+      - name: Download immutable deployment configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: cv-deployment-config-${{ env.DEPLOY_SHA }}
+          path: deployment-config
+          github-token: ${{ github.token }}
+          run-id: ${{ env.DEPLOY_RUN_ID }}
+
+      - name: Load and validate deployment configuration with Terragrunt
+        shell: bash
+        run: |
+          set -euo pipefail
+          rendered="$RUNNER_TEMP/deployment-config.json"
+          terragrunt render \
+            --json \
+            --config deployment-config/env.hcl \
+            > "$rendered"
+
+          jq --exit-status '.locals.ovh_region | strings | test("^[A-Z0-9-]+$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.site_hostname | strings | test("^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.site_url | strings | test("^https://[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.cloudflare_zone_id | strings | test("^[0-9a-f]{32}$")' "$rendered" > /dev/null
+
+          {
+            echo "OVH_REGION=$(jq --raw-output '.locals.ovh_region' "$rendered")"
+            echo "OVH_SITE_BUCKET=$(jq --raw-output '.locals.site_hostname' "$rendered")"
+            echo "SITE_URL=$(jq --raw-output '.locals.site_url' "$rendered")"
+            echo "CLOUDFLARE_ZONE_ID=$(jq --raw-output '.locals.cloudflare_zone_id' "$rendered")"
+          } >> "$GITHUB_ENV"
+
+      - name: Check required configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            DEPLOY_RUN_ID
+            DEPLOY_SHA
+            OVH_REGION
+            OVH_SITE_BUCKET
+            CLOUDFLARE_ZONE_ID
+            OVH_SITE_S3_ACCESS_KEY
+            OVH_SITE_S3_SECRET_KEY
+            CLOUDFLARE_API_TOKEN
+          )
+          for variable in "${required[@]}"; do
+            if [[ -z "${!variable:-}" ]]; then
+              echo "Missing deployment configuration or secret: ${variable}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Download immutable CI artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cv-static-${{ env.DEPLOY_SHA }}
+          path: dist
+          github-token: ${{ github.token }}
+          run-id: ${{ env.DEPLOY_RUN_ID }}
+
+      - name: Validate downloaded artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/en/index.html
+          test -f dist/sitemap.xml
+          test -f dist/downloads/yoann-lascaux-cv-fr.pdf
+          test -f dist/downloads/yoann-lascaux-cv-en.pdf
+          if find dist -type l | grep -q .; then
+            echo 'The deployment artifact must not contain symbolic links.' >&2
+            exit 1
+          fi
+
+      - name: Configure OVHcloud S3 client
+        shell: bash
+        run: |
+          set -euo pipefail
+          region="${OVH_REGION,,}"
+          cat > "$RUNNER_TEMP/s3cfg" <<EOF
+          [default]
+          access_key = ${OVH_SITE_S3_ACCESS_KEY}
+          secret_key = ${OVH_SITE_S3_SECRET_KEY}
+          bucket_location = ${OVH_REGION}
+          host_base = s3.${region}.io.cloud.ovh.net
+          host_bucket = %(bucket)s.s3.${region}.io.cloud.ovh.net
+          use_https = True
+          signature_v2 = False
+          check_ssl_certificate = True
+          check_ssl_hostname = True
+          guess_mime_type = True
+          EOF
+          chmod 600 "$RUNNER_TEMP/s3cfg"
+
+      - name: Publish site to OVHcloud Object Storage
+        shell: bash
+        run: |
+          set -euo pipefail
+          s3cmd \
+            --config="$RUNNER_TEMP/s3cfg" \
+            sync \
+            --delete-removed \
+            --delete-after \
+            --acl-public \
+            dist/ \
+            "s3://${OVH_SITE_BUCKET}/"
+
+      - name: Purge the Cloudflare cache for the site
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$RUNNER_TEMP/cloudflare-purge.json"
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data "{\"hosts\":[\"${OVH_SITE_BUCKET}\"]}" \
+            --output "$response"
+          jq --exit-status '.success == true' "$response" > /dev/null
+
+      - name: Verify public deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            --retry 5 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            "${SITE_URL}/" > /dev/null
+          curl --fail --silent --show-error \
+            --retry 5 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            "${SITE_URL}/en/" > /dev/null
+          curl --fail --silent --show-error \
+            --retry 5 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            "${SITE_URL}/sitemap.xml" > /dev/null
+
+      - name: Record deployed revision
+        run: echo "Published immutable artifact for \`${DEPLOY_SHA}\` from CI run \`${DEPLOY_RUN_ID}\`." >> "$GITHUB_STEP_SUMMARY"
