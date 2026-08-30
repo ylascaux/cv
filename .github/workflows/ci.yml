@@ -52,10 +52,18 @@ jobs:
         run: npm audit --omit=dev --audit-level=moderate
 
       - name: Upload static artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@v4
         with:
           name: cv-static-${{ github.sha }}
           path: dist/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload deployment configuration
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-deployment-config-${{ github.sha }}
+          path: deploy/live/production/env.hcl
           if-no-files-found: error
           retention-days: 14
 
@@ -72,10 +80,6 @@ jobs:
     name: OpenTofu and Terragrunt
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    env:
-      # Parsing the stack requires a bucket name, but CI never initializes the
-      # remote backend and never receives storage credentials.
-      TG_STATE_BUCKET: ci-state-backend-not-used
     steps:
       - name: Check out repository
         uses: actions/checkout@v5

@@ -210,20 +210,20 @@ s3cmd -c /chemin/vers/config-ovh sync --delete-removed --acl-public dist/ s3://c
 
 ### Backend d’état OVHcloud
 
-L’état OpenTofu est stocké dans un bucket OVHcloud Object Storage privé et séparé du site. Ce bucket de bootstrap n’est pas créé par la stack qu’il héberge : le créer une seule fois dans le Manager OVHcloud, sans Static Website ni ACL publique, avec versionnement et chiffrement AES256 activés. Son nom globalement unique est fourni par `TG_STATE_BUCKET`.
+L’état OpenTofu est stocké dans un bucket OVHcloud Object Storage privé et séparé du site. Ce bucket de bootstrap n’est pas créé par la stack qu’il héberge : le créer une seule fois dans le Manager OVHcloud, sans Static Website ni ACL publique, avec versionnement et chiffrement AES256 activés. Son nom globalement unique est versionné dans `deploy/live/production/env.hcl`.
 
 Utiliser un utilisateur Object Storage dédié au backend, limité à `s3:GetBucketLocation`, `s3:ListBucket`, `s3:GetObject`, `s3:PutObject` et `s3:DeleteObject` sur le bucket d’état et ses objets. `DeleteObject` est nécessaire pour libérer le fichier de verrouillage ; cet utilisateur ne doit pas pouvoir modifier les ACL publiques ni accéder au bucket du site.
 
-Le backend utilise le verrouillage natif S3-compatible (`use_lockfile`). La CI de validation utilise un nom factice uniquement pour analyser le HCL, ne reçoit aucun credential et n’initialise jamais ce backend.
+Le backend utilise le verrouillage natif S3-compatible (`use_lockfile`). La CI de validation lit la configuration publique dans `env.hcl`, ne reçoit aucun identifiant d’accès et n’initialise jamais ce backend.
 
 Les identifiants sont fournis au client S3 d’OpenTofu avec `AWS_ACCESS_KEY_ID` et `AWS_SECRET_ACCESS_KEY`. Ces noms sont imposés par l’implémentation du protocole S3 ; ils contiennent les clés OVHcloud et n’impliquent aucun service AWS :
 
 ```shell
-export TG_STATE_BUCKET="nom-du-bucket-prive"
-export OVH_REGION="GRA"
 export AWS_ACCESS_KEY_ID="access-key-ovh-du-backend"
 export AWS_SECRET_ACCESS_KEY="secret-key-ovh-du-backend"
 ```
+
+La région, l’endpoint OVHcloud, le projet, le bucket de state, le hostname, l’URL et la zone Cloudflare sont chargés depuis `deploy/live/production/env.hcl` avec `read_terragrunt_config(...).locals`.
 
 Si un `apply` a déjà produit un état local, ne pas supprimer ni régénérer `.terragrunt-stack/`. Sauvegarder d’abord chaque `terraform.tfstate`, puis migrer depuis les unités existantes :
 
@@ -241,25 +241,15 @@ terragrunt run -- state list
 
 Vérifier dans le bucket la présence de `production/storage/tofu.tfstate` et `production/edge/tofu.tfstate`, ainsi que le bon fonctionnement des fichiers `.tflock`, avant tout nouvel `apply`. Chaque pull request interne reçoit un plan authentifié. Après fusion, le workflow recalcule le plan et le job d’application est soumis à la protection de l’environnement GitHub `production-infrastructure`.
 
-Avant de changer les nameservers chez OVH, recopier et vérifier toute la zone dans Cloudflare, notamment MX, SPF, DKIM, DMARC et les autres sous-domaines. Les secrets nécessaires à un futur plan sont `OVH_ENDPOINT`, `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET`, `OVH_CONSUMER_KEY`, `OVH_CLOUD_PROJECT_SERVICE`, `CLOUDFLARE_API_TOKEN`, `AWS_ACCESS_KEY_ID` et `AWS_SECRET_ACCESS_KEY`. Le nom non secret du bucket est fourni par `TG_STATE_BUCKET`. Ces valeurs ne doivent jamais être ajoutées au dépôt.
+Avant de changer les nameservers chez OVH, recopier et vérifier toute la zone dans Cloudflare, notamment MX, SPF, DKIM, DMARC et les autres sous-domaines. Seuls `OVH_APPLICATION_KEY`, `OVH_APPLICATION_SECRET`, `OVH_CONSUMER_KEY`, `CLOUDFLARE_API_TOKEN` et les deux paires de clés S3-compatible sont secrets. Ils ne doivent jamais être ajoutés au dépôt.
 
 Le token Cloudflare doit être limité à la zone `yoann-lascaux.fr` avec les permissions de lecture de zone, modification DNS, modification des règles/paramètres de zone et, pour la publication, purge du cache. Les clés S3-compatible utilisées par `s3cmd` sont distinctes des identifiants du provider OVHcloud et de ceux du backend.
 
 ### Configuration GitHub Actions
 
-Créer les variables de dépôt suivantes dans `Settings → Secrets and variables → Actions → Variables` :
+Les paramètres publics sont centralisés dans `deploy/live/production/env.hcl` et aucune GitHub Actions Variable n’est requise. La CI archive ce fichier avec le même SHA que l’artefact statique ; le workflow de publication le télécharge sans checkout, valide strictement les valeurs attendues et les charge dans son environnement.
 
-```text
-TG_STATE_BUCKET
-OVH_REGION                     # GRA
-OVH_ENDPOINT                   # ovh-eu
-OVH_CLOUD_PROJECT_SERVICE
-CLOUDFLARE_ZONE_ID
-OVH_SITE_BUCKET                # cv.yoann-lascaux.fr
-SITE_URL                       # https://cv.yoann-lascaux.fr
-```
-
-Créer les secrets nécessaires au plan d’infrastructure au niveau du dépôt :
+Créer uniquement les secrets nécessaires au plan d’infrastructure au niveau du dépôt :
 
 ```text
 OVH_APPLICATION_KEY

@@ -26,10 +26,6 @@ concurrency:
 env:
   DEPLOY_RUN_ID: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || inputs.artifact_run_id }}
   DEPLOY_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || inputs.revision }}
-  OVH_REGION: ${{ vars.OVH_REGION || 'GRA' }}
-  OVH_SITE_BUCKET: ${{ vars.OVH_SITE_BUCKET || 'cv.yoann-lascaux.fr' }}
-  SITE_URL: ${{ vars.SITE_URL || 'https://cv.yoann-lascaux.fr' }}
-  CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
 
 jobs:
   deploy:
@@ -44,16 +40,53 @@ jobs:
     timeout-minutes: 15
     environment:
       name: production-site
-      url: ${{ vars.SITE_URL || 'https://cv.yoann-lascaux.fr' }}
+      url: https://cv.yoann-lascaux.fr
     env:
       OVH_SITE_S3_ACCESS_KEY: ${{ secrets.OVH_SITE_S3_ACCESS_KEY }}
       OVH_SITE_S3_SECRET_KEY: ${{ secrets.OVH_SITE_S3_SECRET_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - name: Install deployment tools
+        shell: bash
         run: |
+          set -euo pipefail
           sudo apt-get update
           sudo apt-get install --yes jq s3cmd
+          curl --fail --location --silent --show-error \
+            --output "$RUNNER_TEMP/terragrunt" \
+            https://github.com/gruntwork-io/terragrunt/releases/download/v1.1.4/terragrunt_linux_amd64
+          echo 'a2640da8455fa5f3671167e6373832b0907b9dc972dd01c2093cc7808934e158  '"$RUNNER_TEMP/terragrunt" | sha256sum --check
+          sudo install --mode=0755 "$RUNNER_TEMP/terragrunt" /usr/local/bin/terragrunt
+
+      - name: Download immutable deployment configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: cv-deployment-config-${{ env.DEPLOY_SHA }}
+          path: deployment-config
+          github-token: ${{ github.token }}
+          run-id: ${{ env.DEPLOY_RUN_ID }}
+
+      - name: Load and validate deployment configuration with Terragrunt
+        shell: bash
+        run: |
+          set -euo pipefail
+          rendered="$RUNNER_TEMP/deployment-config.json"
+          terragrunt render \
+            --json \
+            --config deployment-config/env.hcl \
+            > "$rendered"
+
+          jq --exit-status '.locals.ovh_region | strings | test("^[A-Z0-9-]+$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.site_hostname | strings | test("^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.site_url | strings | test("^https://[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")' "$rendered" > /dev/null
+          jq --exit-status '.locals.cloudflare_zone_id | strings | test("^[0-9a-f]{32}$")' "$rendered" > /dev/null
+
+          {
+            echo "OVH_REGION=$(jq --raw-output '.locals.ovh_region' "$rendered")"
+            echo "OVH_SITE_BUCKET=$(jq --raw-output '.locals.site_hostname' "$rendered")"
+            echo "SITE_URL=$(jq --raw-output '.locals.site_url' "$rendered")"
+            echo "CLOUDFLARE_ZONE_ID=$(jq --raw-output '.locals.cloudflare_zone_id' "$rendered")"
+          } >> "$GITHUB_ENV"
 
       - name: Check required configuration
         shell: bash
@@ -71,7 +104,7 @@ jobs:
           )
           for variable in "${required[@]}"; do
             if [[ -z "${!variable:-}" ]]; then
-              echo "Missing GitHub Actions variable or secret: ${variable}" >&2
+              echo "Missing deployment configuration or secret: ${variable}" >&2
               exit 1
             fi
           done

@@ -24,11 +24,6 @@ concurrency:
 
 env:
   TMPDIR: /tmp
-  TG_STATE_BUCKET: ${{ vars.TG_STATE_BUCKET }}
-  OVH_REGION: ${{ vars.OVH_REGION || 'GRA' }}
-  OVH_ENDPOINT: ${{ vars.OVH_ENDPOINT || 'ovh-eu' }}
-  OVH_CLOUD_PROJECT_SERVICE: ${{ vars.OVH_CLOUD_PROJECT_SERVICE }}
-  CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
   OVH_APPLICATION_KEY: ${{ secrets.OVH_APPLICATION_KEY }}
   OVH_APPLICATION_SECRET: ${{ secrets.OVH_APPLICATION_SECRET }}
   OVH_CONSUMER_KEY: ${{ secrets.OVH_CONSUMER_KEY }}
@@ -56,9 +51,6 @@ jobs:
         run: |
           set -euo pipefail
           required=(
-            TG_STATE_BUCKET
-            OVH_CLOUD_PROJECT_SERVICE
-            CLOUDFLARE_ZONE_ID
             OVH_APPLICATION_KEY
             OVH_APPLICATION_SECRET
             OVH_CONSUMER_KEY

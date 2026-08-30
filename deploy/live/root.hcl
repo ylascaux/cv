@@ -1,6 +1,7 @@
 locals {
-  ovh_region       = upper(get_env("OVH_REGION", "GRA"))
-  state_bucket     = get_env("TG_STATE_BUCKET")
+  environment      = read_terragrunt_config(find_in_parent_folders("env.hcl")).locals
+  ovh_region       = upper(local.environment.ovh_region)
+  state_bucket     = local.environment.state_bucket
   state_key_prefix = replace(path_relative_to_include(), "/.terragrunt-stack", "")
 }
 

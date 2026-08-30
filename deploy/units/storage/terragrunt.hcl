@@ -7,6 +7,7 @@ terraform {
 }
 
 inputs = {
+  endpoint     = values.ovh_endpoint
   service_name = values.ovh_service_name
   bucket_name  = values.site_hostname
   region_name  = values.ovh_region

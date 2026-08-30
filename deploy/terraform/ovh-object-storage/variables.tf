@@ -1,3 +1,13 @@
+variable "endpoint" {
+  description = "OVHcloud API endpoint."
+  type        = string
+
+  validation {
+    condition     = contains(["ovh-eu", "ovh-ca", "ovh-us"], var.endpoint)
+    error_message = "endpoint must be one of ovh-eu, ovh-ca or ovh-us."
+  }
+}
+
 variable "service_name" {
   description = "OVHcloud Public Cloud project identifier. When null, OVH_CLOUD_PROJECT_SERVICE is used by the provider."
   type        = string
