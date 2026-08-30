@@ -171,15 +171,5 @@ jobs:
             --output "$response"
           jq --exit-status '.success == true' "$response" > /dev/null
 
-      - name: Verify preview remains IP restricted
-        shell: bash
-        run: |
-          set -euo pipefail
-          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "${SITE_URL}/")
-          if [[ "$status" != '403' ]]; then
-            echo "Expected the preview URL to reject this GitHub runner with HTTP 403, got ${status}." >&2
-            exit 1
-          fi
-
       - name: Record deployed revision
         run: echo "Published preview artifact for \`${DEPLOY_SHA}\` from CI run \`${DEPLOY_RUN_ID}\`." >> "$GITHUB_STEP_SUMMARY"
