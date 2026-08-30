@@ -123,4 +123,6 @@ Les fichiers de `dist/` sont générés et ne doivent pas être modifiés à la 
 | Environnement | URL                                   | Bucket OVHcloud               | Publication                                 |
 | ------------- | ------------------------------------- | ----------------------------- | ------------------------------------------- |
 | Production    | <https://cv.yoann-lascaux.fr>         | `cv.yoann-lascaux.fr`         | automatique après une CI réussie sur `main` |
-| Preview       | <https://preview.cv.yoann-lascaux.fr> | `cv.yoann-lascaux.fr-preview` | workflow manuel `Preview site deployment`   |
+| Preview       | <https://preview-cv.yoann-lascaux.fr> | `cv.yoann-lascaux.fr-preview` | workflow manuel `Preview site deployment`   |
+
+Les workflows du site et de l’infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L’environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.

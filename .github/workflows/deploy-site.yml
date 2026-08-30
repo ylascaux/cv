@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment:
-      name: production-site
+      name: production-infrastructure
       url: https://cv.yoann-lascaux.fr
     env:
       OVH_SITE_S3_ACCESS_KEY: ${{ secrets.OVH_SITE_S3_ACCESS_KEY }}
