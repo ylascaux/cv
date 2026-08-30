@@ -1,51 +1,36 @@
 # CV — Yoann Lascaux
 
-Site statique bilingue du CV de Yoann Lascaux. Le contenu éditorial est stocké dans des fichiers YAML versionnés, validé par JSON Schema, puis rendu avec Astro en HTML et en PDF.
+Bilingual static CV website built with Astro and generated from versioned YAML content. The same sources are validated with JSON Schema and rendered as both HTML and PDF.
 
-Le dépôt contient le contenu du CV, le site, les contrôles de qualité, les images Docker et l’infrastructure OpenTofu/Terragrunt destinée à sa publication sur OVHcloud Object Storage derrière Cloudflare.
+Production: <https://cv.yoann-lascaux.fr>
 
-## Fonctionnalités
+## Implementation and AI usage
 
-- versions française (`/`) et anglaise (`/en/`) générées depuis un modèle commun ;
-- contenu séparé de la présentation dans `content/cv.fr.yaml` et `content/cv.en.yaml` ;
-- validation structurelle et contrôle de cohérence entre les deux langues ;
-- rendu statique responsive, accessible et utilisable sans JavaScript côté client ;
-- détails complémentaires des expériences repliables sur le site et repris dans le PDF, hors stacks techniques redondantes ;
-- génération de deux PDF A4 avec Chromium ;
-- tests Playwright sur Chromium desktop et mobile, avec contrôles Axe ;
-- images Docker pour servir l’artefact statique ou le prévisualiser localement ;
-- CI/CD GitHub Actions pour valider, construire, planifier l’infrastructure et publier des artefacts identifiés par révision ;
-- infrastructure OVHcloud Object Storage et Cloudflare décrite avec OpenTofu et Terragrunt.
+The application and JavaScript layer were built with AI assistance.
 
-## Prérequis
+The architecture, OpenTofu/Terragrunt infrastructure as code, GitHub Actions workflows, CI/CD pipeline, security hardening, hosting design, and operational decisions were designed and implemented by Yoann Lascaux.
 
-### Développement avec Node.js
+AI is used as an implementation assistant; architecture, security, platform, and operational decisions remain human-owned.
 
-- Node.js 24 ;
-- npm 11 ;
-- Chromium installé par Playwright pour les tests E2E et la génération PDF.
+## Highlights
 
-### Exécution avec Docker
+- French and English versions generated from a shared content model;
+- versioned YAML content with schema and cross-language consistency validation;
+- static, responsive, accessible output with no client-side JavaScript requirement;
+- A4 PDF generation with Chromium;
+- Playwright end-to-end tests on desktop and mobile, including Axe accessibility checks;
+- GitHub Actions CI/CD with immutable revision-based artifacts;
+- OpenTofu and Terragrunt infrastructure for OVHcloud Object Storage and Cloudflare;
+- private object storage origin accessed through a Cloudflare Worker with read-only S3 credentials;
+- secret scanning, dependency auditing, IaC validation, and pinned GitHub Actions.
 
-- Docker ;
-- Docker Compose.
+## Local development
 
-### Infrastructure avec Nix
+Requirements:
 
-- Nix avec les flakes activées ;
-- direnv, facultatif mais recommandé.
-
-Le `flake.nix` fournit OpenTofu 1.12.6, Terragrunt 1.1.4, Node.js 24, `actionlint`, `s3cmd` et `jq` :
-
-```shell
-direnv allow
-# ou, sans direnv
-nix develop
-```
-
-## Démarrage rapide
-
-### Développement local
+- Node.js 24;
+- npm;
+- Chromium through Playwright for E2E tests and PDF generation.
 
 ```shell
 npm ci
@@ -53,76 +38,72 @@ npx playwright install chromium
 npm run dev
 ```
 
-Le serveur Astro avec rechargement automatique est disponible sur <http://localhost:4321>. Les routes principales sont :
+The development server is available at <http://localhost:4321>.
 
-- français : <http://localhost:4321/> ;
-- anglais : <http://localhost:4321/en/>.
+Main routes:
 
-Le serveur de développement ne génère pas les PDF. Utiliser `npm run pdf` ou le service Docker `preview` pour obtenir les documents téléchargeables.
+- French: <http://localhost:4321/>;
+- English: <http://localhost:4321/en/>.
 
-### Prévisualisation avec Docker Compose
-
-```shell
-docker compose up --build
-```
-
-Deux services sont alors lancés :
-
-| Service   | Description                                                       | Français                | Anglais                     |
-| --------- | ----------------------------------------------------------------- | ----------------------- | --------------------------- |
-| `cv`      | build complet servi par Nginx, proche d’un artefact de production | <http://localhost:4321> | <http://localhost:4321/en/> |
-| `preview` | build Astro et PDF servi par le serveur de preview Astro          | <http://localhost:4322> | <http://localhost:4322/en/> |
-
-Le service `preview` reconstruit le site et les PDF au démarrage. Il ne monte pas les sources et n’offre donc pas de rechargement automatique : après une modification, relancer le build avec `docker compose up --build`.
-
-Pour arrêter et supprimer les conteneurs :
+Run the complete quality suite with:
 
 ```shell
-docker compose down
+npm run quality
 ```
 
-## Modifier le contenu
-
-Les sources éditoriales sont :
-
-- `content/cv.fr.yaml` pour le français ;
-- `content/cv.en.yaml` pour l’anglais ;
-- `content/schema.json` pour la structure autorisée.
-
-Après une modification :
-
-```shell
-npm run validate:content
-npm run dev
-```
-
-Les collections traduites doivent conserver les mêmes identifiants. Les dates utilisent le format `YYYY-MM` et une date de fin à `null` indique une expérience en cours.
-
-Les logos d’entreprise sont conservés dans `site/public/logos/companies/`. Leur provenance et leurs conditions d’utilisation sont documentées dans [`site/public/logos/companies/README.md`](site/public/logos/companies/README.md).
-
-Consulter [`docs/content.md`](docs/content.md) pour le modèle détaillé, les règles de validation et l’origine des données importées.
-
-## Artefacts générés
-
-Le build complet :
+Build the website and PDFs with:
 
 ```shell
 npm run build
 ```
 
-produit dans `dist/` :
+Generated files are written to `dist/` and are not committed.
 
-- le site statique français et anglais ;
-- `dist/downloads/yoann-lascaux-cv-fr.pdf` ;
-- `dist/downloads/yoann-lascaux-cv-en.pdf`.
+## Content
 
-Les fichiers de `dist/` sont générés et ne doivent pas être modifiés à la main ni versionnés.
+CV content is stored separately from the presentation layer:
 
-## Environnements déployés
+- `content/cv.fr.yaml` — French content;
+- `content/cv.en.yaml` — English content;
+- `content/schema.json` — allowed content structure.
 
-| Environnement | URL                                   | Bucket OVHcloud               | Publication                                 |
-| ------------- | ------------------------------------- | ----------------------------- | ------------------------------------------- |
-| Production    | <https://cv.yoann-lascaux.fr>         | `cv.yoann-lascaux.fr`         | automatique après une CI réussie sur `main` |
-| Preview       | <https://preview-cv.yoann-lascaux.fr> | `cv.yoann-lascaux.fr-preview` | workflow manuel `Preview site deployment`   |
+Validate content changes with:
 
-Les workflows du site et de l’infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L’environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.
+```shell
+npm run validate:content
+```
+
+More details about the content model are available in [`docs/content.md`](docs/content.md).
+
+## Infrastructure
+
+Infrastructure tooling is reproducible through Nix:
+
+```shell
+nix develop
+```
+
+The deployment architecture is intentionally simple:
+
+```text
+Internet
+  -> Cloudflare
+  -> Cloudflare Worker
+  -> signed HTTPS S3 requests
+  -> private OVHcloud Object Storage
+```
+
+The repository contains no deployment credentials. Runtime and infrastructure secrets are provided through protected CI/CD environments and sensitive Terraform/OpenTofu state.
+
+## Security controls
+
+The repository and deployment pipeline include:
+
+- protected `main` branch with required CI checks;
+- Gitleaks secret scanning;
+- dependency updates through Dependabot;
+- production dependency auditing;
+- GitHub Actions pinned to full commit SHAs;
+- OpenTofu/Terragrunt formatting and validation;
+- IaC misconfiguration scanning;
+- private origin storage with least-privilege read access for the edge Worker.
