@@ -164,14 +164,6 @@ jobs:
             dist/ \
             "s3://${OVH_SITE_BUCKET}/"
 
-          # Reconcile objects that may have been public before this architecture.
-          s3cmd \
-            --config="$RUNNER_TEMP/s3cfg" \
-            setacl \
-            --acl-private \
-            --recursive \
-            "s3://${OVH_SITE_BUCKET}/"
-
       - name: Purge the Cloudflare cache for the site
         shell: bash
         run: |
