@@ -39,6 +39,11 @@ resource "cloudflare_workers_script" "static_proxy" {
       text = local.origin_hostname
     },
     {
+      name = "S3_BUCKET"
+      type = "plain_text"
+      text = var.s3_bucket
+    },
+    {
       name = "S3_REGION"
       type = "plain_text"
       text = var.s3_region
