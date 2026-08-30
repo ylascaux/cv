@@ -52,7 +52,7 @@ jobs:
         run: npm audit --omit=dev --audit-level=moderate
 
       - name: Upload static artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cv-static-${{ github.sha }}
           path: dist/
@@ -60,7 +60,7 @@ jobs:
           retention-days: 14
 
       - name: Upload production deployment configuration
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cv-deployment-config-${{ github.sha }}
           path: deploy/live/production/env.hcl
@@ -68,7 +68,7 @@ jobs:
           retention-days: 14
 
       - name: Upload preview deployment configuration
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cv-preview-deployment-config-${{ github.sha }}
           path: deploy/live/preview/env.hcl
@@ -90,10 +90,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v20
+        uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
+
+      - name: Check GitHub Actions are pinned by SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          while IFS= read -r action; do
+            ref="${action##*@}"
+            if [[ ! "$ref" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "GitHub Action is not pinned to a full commit SHA: $action" >&2
+              failed=1
+            fi
+          done < <(
+            grep -RhE '^[[:space:]]*uses:[[:space:]]*[^[:space:]#]+' .github/workflows \
+              | sed -E 's/^[[:space:]]*uses:[[:space:]]*([^[:space:]#]+).*/\1/'
+          )
+          exit "$failed"
 
       - name: Check pinned tool versions
         run: |
