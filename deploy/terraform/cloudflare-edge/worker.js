@@ -1,7 +1,7 @@
 const encoder = new TextEncoder();
 const EMPTY_SHA256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
 
-function toOriginPath(pathname) {
+function toObjectPath(pathname) {
   if (pathname === '/') {
     return '/index.html';
   }
@@ -36,7 +36,8 @@ async function signedOriginRequest(method, pathname, env) {
   const now = new Date();
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, '');
   const dateStamp = amzDate.slice(0, 8);
-  const canonicalUri = toOriginPath(pathname);
+  const objectPath = toObjectPath(pathname);
+  const canonicalUri = `/${env.S3_BUCKET}${objectPath}`;
   const signedHeaders = 'host;x-amz-content-sha256;x-amz-date';
   const canonicalHeaders =
     `host:${env.ORIGIN_HOSTNAME}\n` +
