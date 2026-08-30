@@ -76,11 +76,15 @@ jobs:
 
           cd deploy/live/production/.terragrunt-stack/storage
           nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/plans/storage.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" \
+            | sed -E 's/^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3} STDOUT tofu: //' \
+            > "$GITHUB_WORKSPACE/plans/storage.txt"
 
           cd ../edge
           nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/plans/edge.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" \
+            | sed -E 's/^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3} STDOUT tofu: //' \
+            > "$GITHUB_WORKSPACE/plans/edge.txt"
 
       - name: Add plans to the workflow summary
         shell: bash
@@ -149,11 +153,15 @@ jobs:
 
           cd deploy/live/production/.terragrunt-stack/storage
           nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/current-plans/storage.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" \
+            | sed -E 's/^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3} STDOUT tofu: //' \
+            > "$GITHUB_WORKSPACE/current-plans/storage.txt"
 
           cd ../edge
           nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- plan -out="$PWD/tfplan"
-          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" > "$GITHUB_WORKSPACE/current-plans/edge.txt"
+          nix develop "$GITHUB_WORKSPACE" --command terragrunt run -- show -no-color "$PWD/tfplan" \
+            | sed -E 's/^[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3} STDOUT tofu: //' \
+            > "$GITHUB_WORKSPACE/current-plans/edge.txt"
 
           cd "$GITHUB_WORKSPACE"
           diff -u reviewed-plans/storage.txt current-plans/storage.txt
