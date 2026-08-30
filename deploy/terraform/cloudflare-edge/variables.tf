@@ -19,19 +19,51 @@ variable "hostname" {
 }
 
 variable "origin_hostname" {
-  description = "OVHcloud Object Storage static website endpoint without a scheme."
+  description = "OVHcloud Object Storage S3 API endpoint without a scheme."
   type        = string
 
   validation {
-    condition     = can(regex("^[a-z0-9.-]+\\.s3-website\\.[a-z0-9-]+\\.io\\.cloud\\.ovh\\.net$", var.origin_hostname))
-    error_message = "origin_hostname must be an OVHcloud S3 website endpoint."
+    condition     = can(regex("^s3\\.[a-z0-9-]+\\.io\\.cloud\\.ovh\\.net$", var.origin_hostname))
+    error_message = "origin_hostname must be an OVHcloud regional S3 API endpoint."
   }
 }
 
-variable "worker_name" {
-  description = "Cloudflare Worker script name used to proxy the OVHcloud static website."
+variable "s3_bucket" {
+  description = "Private OVHcloud Object Storage bucket read by the Worker."
   type        = string
-  default     = "cv-ovh-static-proxy"
+
+  validation {
+    condition     = can(regex("^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$", var.s3_bucket))
+    error_message = "s3_bucket must be a valid lowercase S3 bucket name."
+  }
+}
+
+variable "s3_region" {
+  description = "Lowercase OVHcloud region used in the AWS Signature V4 scope."
+  type        = string
+
+  validation {
+    condition     = can(regex("^[a-z0-9-]+$", var.s3_region))
+    error_message = "s3_region must contain only lowercase letters, digits, and hyphens."
+  }
+}
+
+variable "s3_access_key" {
+  description = "Read-only S3 access key injected into the Cloudflare Worker."
+  type        = string
+  sensitive   = true
+}
+
+variable "s3_secret_key" {
+  description = "Read-only S3 secret key injected into the Cloudflare Worker."
+  type        = string
+  sensitive   = true
+}
+
+variable "worker_name" {
+  description = "Cloudflare Worker script name used to proxy the private OVHcloud S3 origin."
+  type        = string
+  default     = "cv-ovh-private-s3-proxy"
 
   validation {
     condition     = can(regex("^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", var.worker_name))
