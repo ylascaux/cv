@@ -30,6 +30,7 @@ unit "edge" {
     ovh_region           = local.environment.ovh_region
     cloudflare_zone_id   = local.environment.cloudflare_zone_id
     worker_name          = local.environment.worker_name
+    analytics_dataset    = local.environment.analytics_dataset
     access_restricted    = false
     allowed_ips          = []
     manage_zone_rulesets = true

@@ -119,7 +119,8 @@ The repository and deployment pipeline include:
 - OpenTofu/Terragrunt formatting and validation;
 - IaC misconfiguration scanning;
 - private origin storage with least-privilege read access for the edge Worker.
-  Les workflows du site et de l'infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L'environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.
+
+Les workflows du site et de l'infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L'environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.
 
 ## Analytics
 
