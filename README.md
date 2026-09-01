@@ -8,17 +8,17 @@ Production: <https://cv.yoann-lascaux.fr>
 
 The application and JavaScript layer were built with AI assistance.
 
-- versions française (`/`) et anglaise (`/en/`) générées depuis un modèle commun ;
-- contenu séparé de la présentation dans `content/cv.fr.yaml` et `content/cv.en.yaml` ;
-- validation structurelle et contrôle de cohérence entre les deux langues ;
-- rendu statique responsive, accessible et utilisable sans JavaScript côté client ;
-- détails complémentaires des expériences repliables sur le site et repris dans le PDF, hors stacks techniques redondantes ;
-- génération de deux PDF A4 avec Chromium ;
-- tests Playwright sur Chromium desktop et mobile, avec contrôles Axe ;
-- images Docker pour servir l’artefact statique ou le prévisualiser localement ;
-- CI/CD GitHub Actions pour valider, construire, planifier l’infrastructure et publier des artefacts identifiés par révision ;
-- infrastructure OVHcloud Object Storage et Cloudflare décrite avec OpenTofu et Terragrunt.
-- analytics d'audience sans cookie, hébergé dans Cloudflare Workers Analytics Engine.
+- French (`/`) and English (`/en/`) versions generated from a shared content model;
+- content separated from presentation in `content/cv.fr.yaml` and `content/cv.en.yaml`;
+- schema validation and cross-language consistency checks;
+- responsive, accessible static rendering that works without client-side JavaScript;
+- expandable experience details on the website, also included in the PDFs without redundant technology stacks;
+- two A4 PDFs generated with Chromium;
+- Playwright tests on desktop and mobile Chromium, including Axe accessibility checks;
+- Docker images for serving or previewing the static artifact locally;
+- GitHub Actions CI/CD for validation, builds, infrastructure planning, and revision-based artifact publishing;
+- OVHcloud Object Storage and Cloudflare infrastructure managed with OpenTofu and Terragrunt;
+- cookie-free audience analytics powered by Cloudflare Workers Analytics Engine.
 
 The architecture, OpenTofu/Terragrunt infrastructure as code, GitHub Actions workflows, CI/CD pipeline, security hardening, hosting design, and operational decisions were designed and implemented by Yoann Lascaux.
 
@@ -120,10 +120,10 @@ The repository and deployment pipeline include:
 - IaC misconfiguration scanning;
 - private origin storage with least-privilege read access for the edge Worker.
 
-Les workflows du site et de l'infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L'environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.
+The website and infrastructure workflows share the existing `production-infrastructure` and `preview-infrastructure` GitHub environments. This centralizes target-specific secrets without duplicating them in website-only environments. The `production-infrastructure` environment must retain required approval to protect public deployments.
 
 ## Analytics
 
-Les visites estimées humaines, les IA, les bots, le temps d'engagement et les téléchargements PDF sont enregistrés par le Worker Cloudflare sans cookie, IP ou user-agent conservé. Les catégories IA/bot sont des estimations issues de signatures de user-agent. Les datasets, les limites et les requêtes de consultation sont documentés dans [`docs/analytics.md`](docs/analytics.md).
+Estimated human, AI, and bot visits, engagement time, and PDF downloads are recorded by the Cloudflare Worker without cookies or retained IP addresses or user-agent strings. AI and bot categories are estimates based on user-agent signatures. Datasets, limitations, and example queries are documented in [`docs/analytics.md`](docs/analytics.md).
 
-Le serveur MCP local de consultation est lancé avec `npm run analytics:mcp`. Sa configuration dans Codex et les permissions Cloudflare nécessaires sont détaillées dans [`docs/analytics.md`](docs/analytics.md).
+Start the local analytics MCP server with `npm run analytics:mcp`. Its Codex configuration and required Cloudflare permissions are detailed in [`docs/analytics.md`](docs/analytics.md).
