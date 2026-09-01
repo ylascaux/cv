@@ -15,17 +15,21 @@
     "lint": "eslint .",
     "test:e2e": "npm run build:site && playwright test",
     "test:worker": "node --test deploy/terraform/cloudflare-edge/worker.test.js",
+    "test:analytics-mcp": "node --test scripts/analytics-mcp.test.mjs",
+    "analytics:mcp": "node scripts/analytics-mcp.mjs",
     "pdf": "npm run build:site && npm run pdf:generate",
     "pdf:generate": "node scripts/generate-pdf.mjs",
-    "quality": "npm run format:check && npm run lint && npm run check && npm run test:worker && npm run test:e2e"
+    "quality": "npm run format:check && npm run lint && npm run check && npm run test:worker && npm run test:analytics-mcp && npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/check": "0.9.10",
+    "@modelcontextprotocol/sdk": "1.30.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "astro": "7.2.9",
     "typescript": "6.0.3",
-    "yaml": "2.9.0"
+    "yaml": "2.9.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

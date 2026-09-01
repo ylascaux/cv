@@ -7,6 +7,7 @@ Production: <https://cv.yoann-lascaux.fr>
 ## Implementation and AI usage
 
 The application and JavaScript layer were built with AI assistance.
+
 - versions française (`/`) et anglaise (`/en/`) générées depuis un modèle commun ;
 - contenu séparé de la présentation dans `content/cv.fr.yaml` et `content/cv.en.yaml` ;
 - validation structurelle et contrôle de cohérence entre les deux langues ;
@@ -118,8 +119,10 @@ The repository and deployment pipeline include:
 - OpenTofu/Terragrunt formatting and validation;
 - IaC misconfiguration scanning;
 - private origin storage with least-privilege read access for the edge Worker.
-Les workflows du site et de l'infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L'environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.
+  Les workflows du site et de l'infrastructure partagent les environnements GitHub existants `production-infrastructure` et `preview-infrastructure`. Cela centralise les secrets nécessaires à chaque cible sans les recopier dans des environnements propres au site. L'environnement `production-infrastructure` doit conserver une approbation obligatoire afin de protéger les déploiements publics.
 
 ## Analytics
 
 Les visites estimées humaines, les IA, les bots, le temps d'engagement et les téléchargements PDF sont enregistrés par le Worker Cloudflare sans cookie, IP ou user-agent conservé. Les catégories IA/bot sont des estimations issues de signatures de user-agent. Les datasets, les limites et les requêtes de consultation sont documentés dans [`docs/analytics.md`](docs/analytics.md).
+
+Le serveur MCP local de consultation est lancé avec `npm run analytics:mcp`. Sa configuration dans Codex et les permissions Cloudflare nécessaires sont détaillées dans [`docs/analytics.md`](docs/analytics.md).
