@@ -125,3 +125,5 @@ Les workflows du site et de l'infrastructure partagent les environnements GitHub
 ## Analytics
 
 Les visites estimées humaines, les IA, les bots, le temps d'engagement et les téléchargements PDF sont enregistrés par le Worker Cloudflare sans cookie, IP ou user-agent conservé. Les catégories IA/bot sont des estimations issues de signatures de user-agent. Les datasets, les limites et les requêtes de consultation sont documentés dans [`docs/analytics.md`](docs/analytics.md).
+
+Le serveur MCP local de consultation est lancé avec `npm run analytics:mcp`. Sa configuration dans Codex et les permissions Cloudflare nécessaires sont détaillées dans [`docs/analytics.md`](docs/analytics.md).

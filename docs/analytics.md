@@ -65,3 +65,28 @@ ORDER BY downloads DESC
 ```
 
 L'API SQL est accessible à l'adresse `https://api.cloudflare.com/client/v4/accounts/<account-id>/analytics_engine/sql`, avec le jeton en en-tête `Authorization: Bearer …`. Les requêtes utilisent `_sample_interval` afin de rester correctes si Cloudflare applique de l'échantillonnage.
+
+## MCP local Codex
+
+Le serveur MCP local `cv-analytics` fournit deux outils strictement en lecture seule :
+
+- `analytics_overview` : visites estimées humaines, IA et bots, temps humain cumulé et téléchargements ;
+- `analytics_timeseries` : série quotidienne de ces événements.
+
+Il nécessite un jeton Cloudflare restreint à **Account Analytics: Read**. Définir les variables dans l'environnement de Codex, sans les écrire dans un fichier versionné :
+
+```shell
+export CLOUDFLARE_ACCOUNT_ID='…'
+export CLOUDFLARE_ANALYTICS_TOKEN='…'
+export CLOUDFLARE_ANALYTICS_DATASET='cv_traffic_production'
+```
+
+Dans les réglages de Codex, ajouter un serveur **STDIO** nommé `cv-analytics` avec :
+
+```text
+Command: npm
+Arguments: run analytics:mcp
+Working directory: /Users/yoann/projects/cv
+```
+
+Autoriser les variables `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ANALYTICS_TOKEN` et `CLOUDFLARE_ANALYTICS_DATASET`, puis redémarrer Codex. Le serveur est aussi configurable dans un `config.toml` local avec `command`, `args`, `cwd` et `env_vars`.
