@@ -11,4 +11,5 @@ locals {
   html_edge_ttl      = 300
   asset_edge_ttl     = 31536000
   worker_name        = "cv-ovh-private-s3-proxy"
+  analytics_dataset  = "cv_traffic_production"
 }

@@ -88,6 +88,17 @@ variable "allowed_ips" {
   }
 }
 
+variable "analytics_dataset" {
+  description = "Cloudflare Workers Analytics Engine dataset used for privacy-preserving CV traffic metrics."
+  type        = string
+  default     = "cv_traffic"
+
+  validation {
+    condition     = can(regex("^[A-Za-z][A-Za-z0-9_]{0,63}$", var.analytics_dataset))
+    error_message = "analytics_dataset must start with a letter and contain only letters, digits, and underscores."
+  }
+}
+
 variable "manage_zone_rulesets" {
   description = "Whether this module owns the zone-level cache and security-header rulesets. Only one stack per zone may enable it."
   type        = bool

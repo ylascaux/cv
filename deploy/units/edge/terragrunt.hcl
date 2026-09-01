@@ -30,6 +30,7 @@ inputs = {
   worker_name          = values.worker_name
   access_restricted    = values.access_restricted
   allowed_ips          = values.allowed_ips
+  analytics_dataset    = values.analytics_dataset
   manage_zone_rulesets = values.manage_zone_rulesets
   html_edge_ttl        = values.html_edge_ttl
   asset_edge_ttl       = values.asset_edge_ttl

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { contentTypeForPath, isClientAllowed } from './worker.js';
+import { classifyTraffic, contentTypeForPath, isClientAllowed, localeForPath } from './worker.js';
 
 const cases = [
   ['/', 'text/html; charset=utf-8'],
@@ -40,4 +40,16 @@ test('derives browser-safe content types from public asset paths', () => {
   for (const [path, expected] of cases) {
     assert.equal(contentTypeForPath(path), expected, path);
   }
+});
+
+test('classifies known AI agents separately from other bots without storing their user agents', () => {
+  assert.equal(classifyTraffic('Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)'), 'ai');
+  assert.equal(classifyTraffic('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'), 'bot');
+  assert.equal(classifyTraffic('Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36'), 'human');
+});
+
+test('assigns analytics events to the CV locale only', () => {
+  assert.equal(localeForPath('/'), 'fr');
+  assert.equal(localeForPath('/en/'), 'en');
+  assert.equal(localeForPath('/downloads/yoann-lascaux-cv-fr.pdf'), 'other');
 });

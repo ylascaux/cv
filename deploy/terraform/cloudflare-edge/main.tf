@@ -68,6 +68,11 @@ resource "cloudflare_workers_script" "static_proxy" {
       type = "plain_text"
       text = join(",", var.allowed_ips)
     },
+    {
+      name    = "CV_ANALYTICS"
+      type    = "analytics_engine"
+      dataset = var.analytics_dataset
+    },
   ]
 }
 

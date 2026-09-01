@@ -78,6 +78,47 @@ const sourceLabel =
           ?.setAttribute('content', theme === 'dark' ? '#15161a' : '#ffffff');
       })();
     </script>
+    <script is:inline>
+      (() => {
+        if (navigator.globalPrivacyControl || navigator.doNotTrack === '1') return;
+
+        const intervalMs = 15_000;
+        let visibleSince = document.visibilityState === 'visible' ? Date.now() : null;
+
+        const sendEngagement = (useBeacon = false) => {
+          if (visibleSince === null) return;
+
+          const seconds = Math.floor((Date.now() - visibleSince) / 1000);
+          if (seconds < 1) return;
+          visibleSince = Date.now();
+
+          const body = JSON.stringify({ seconds: Math.min(seconds, 30) });
+          if (useBeacon && navigator.sendBeacon) {
+            navigator.sendBeacon('/_analytics', new Blob([body], { type: 'application/json' }));
+            return;
+          }
+
+          fetch('/_analytics', {
+            method: 'POST',
+            body,
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            keepalive: true,
+          }).catch(() => undefined);
+        };
+
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            sendEngagement(true);
+            visibleSince = null;
+          } else {
+            visibleSince = Date.now();
+          }
+        });
+        window.addEventListener('pagehide', () => sendEngagement(true));
+        window.setInterval(() => sendEngagement(), intervalMs);
+      })();
+    </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
   </head>

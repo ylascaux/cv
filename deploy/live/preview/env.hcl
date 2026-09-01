@@ -11,5 +11,6 @@ locals {
   html_edge_ttl      = 0
   asset_edge_ttl     = 3600
   worker_name        = "cv-ovh-private-s3-proxy-preview"
+  analytics_dataset  = "cv_traffic_preview"
   allowed_ips        = compact([get_env("PREVIEW_ALLOWED_IP", "")])
 }

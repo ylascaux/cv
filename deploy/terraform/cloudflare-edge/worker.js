@@ -1,5 +1,10 @@
 const encoder = new TextEncoder();
 const EMPTY_SHA256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+const ANALYTICS_PATH = '/_analytics';
+const AI_USER_AGENT_PATTERN =
+  /(?:GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-User|PerplexityBot|Google-Extended|Amazonbot|Bytespider|CCBot|cohere-ai|Diffbot|FacebookBot|YouBot)/i;
+const BOT_USER_AGENT_PATTERN =
+  /(?:bot|crawler|spider|slurp|archiver|facebookexternalhit|linkedinbot|monitoring|uptime|headless|phantomjs)/i;
 const CONTENT_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.gif': 'image/gif',
@@ -21,6 +26,71 @@ const CONTENT_TYPES = {
   '.woff2': 'font/woff2',
   '.xml': 'application/xml; charset=utf-8',
 };
+
+export function classifyTraffic(userAgent) {
+  if (AI_USER_AGENT_PATTERN.test(userAgent)) return 'ai';
+  if (BOT_USER_AGENT_PATTERN.test(userAgent)) return 'bot';
+  return 'human';
+}
+
+export function localeForPath(pathname) {
+  if (pathname === '/') return 'fr';
+  if (pathname === '/en/') return 'en';
+  return 'other';
+}
+
+function isDocumentPath(pathname) {
+  return pathname === '/' || pathname === '/en/';
+}
+
+function isDownloadPath(pathname) {
+  return pathname.startsWith('/downloads/') && pathname.endsWith('.pdf');
+}
+
+function writeAnalytics(env, event, audience, pathname, seconds = 0) {
+  env.CV_ANALYTICS?.writeDataPoint({
+    blobs: [event, audience, localeForPath(pathname), pathname],
+    doubles: [seconds],
+    indexes: ['cv'],
+  });
+}
+
+function isSameOriginAnalyticsRequest(request) {
+  const requestUrl = new URL(request.url);
+  return request.headers.get('Origin') === requestUrl.origin;
+}
+
+async function handleAnalytics(request, env) {
+  if (request.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
+  }
+
+  if (!isSameOriginAnalyticsRequest(request)) return new Response('Forbidden', { status: 403 });
+
+  const contentLength = Number(request.headers.get('Content-Length') ?? '0');
+  if (contentLength > 128) return new Response('Payload Too Large', { status: 413 });
+
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return new Response('Bad Request', { status: 400 });
+  }
+
+  const seconds = payload?.seconds;
+  if (!Number.isInteger(seconds) || seconds < 1 || seconds > 30) return new Response('Bad Request', { status: 400 });
+
+  const referrer = request.headers.get('Referer');
+  if (!referrer) return new Response('Bad Request', { status: 400 });
+
+  const referrerUrl = new URL(referrer);
+  if (referrerUrl.origin !== new URL(request.url).origin || !isDocumentPath(referrerUrl.pathname)) {
+    return new Response('Bad Request', { status: 400 });
+  }
+
+  writeAnalytics(env, 'engagement', 'human', referrerUrl.pathname, seconds);
+  return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
+}
 
 function toObjectPath(pathname) {
   if (pathname === '/') {
@@ -126,6 +196,11 @@ export default {
       });
     }
 
+    const incomingUrl = new URL(request.url);
+    if (incomingUrl.pathname === ANALYTICS_PATH) {
+      return handleAnalytics(request, env);
+    }
+
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method Not Allowed', {
         status: 405,
@@ -135,11 +210,19 @@ export default {
       });
     }
 
-    const incomingUrl = new URL(request.url);
     const originRequest = await signedOriginRequest(request.method, incomingUrl.pathname, env);
     const originResponse = await fetch(originRequest);
     const headers = new Headers(originResponse.headers);
     headers.set('Content-Type', contentTypeForPath(incomingUrl.pathname));
+
+    if (originResponse.ok && request.method === 'GET') {
+      const audience = classifyTraffic(request.headers.get('User-Agent') ?? '');
+      if (isDocumentPath(incomingUrl.pathname)) {
+        writeAnalytics(env, 'page_view', audience, incomingUrl.pathname);
+      } else if (isDownloadPath(incomingUrl.pathname)) {
+        writeAnalytics(env, 'download', audience, incomingUrl.pathname);
+      }
+    }
 
     return new Response(originResponse.body, {
       status: originResponse.status,
