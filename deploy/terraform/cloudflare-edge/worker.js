@@ -47,9 +47,17 @@ function isDownloadPath(pathname) {
   return pathname.startsWith('/downloads/') && pathname.endsWith('.pdf');
 }
 
-function writeAnalytics(env, event, audience, pathname, seconds = 0) {
+export function geographyForRequest(request) {
+  return {
+    continent: request.cf?.continent ?? 'unknown',
+    country: request.cf?.country ?? 'unknown',
+  };
+}
+
+function writeAnalytics(env, request, event, audience, pathname, seconds = 0) {
+  const geography = geographyForRequest(request);
   env.CV_ANALYTICS?.writeDataPoint({
-    blobs: [event, audience, localeForPath(pathname), pathname],
+    blobs: [event, audience, localeForPath(pathname), pathname, geography.continent, geography.country],
     doubles: [seconds],
     indexes: ['cv'],
   });
@@ -88,7 +96,7 @@ async function handleAnalytics(request, env) {
     return new Response('Bad Request', { status: 400 });
   }
 
-  writeAnalytics(env, 'engagement', 'human', referrerUrl.pathname, seconds);
+  writeAnalytics(env, request, 'engagement', 'human', referrerUrl.pathname, seconds);
   return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
 }
 
@@ -218,9 +226,9 @@ export default {
     if (originResponse.ok && request.method === 'GET') {
       const audience = classifyTraffic(request.headers.get('User-Agent') ?? '');
       if (isDocumentPath(incomingUrl.pathname)) {
-        writeAnalytics(env, 'page_view', audience, incomingUrl.pathname);
+        writeAnalytics(env, request, 'page_view', audience, incomingUrl.pathname);
       } else if (isDownloadPath(incomingUrl.pathname)) {
-        writeAnalytics(env, 'download', audience, incomingUrl.pathname);
+        writeAnalytics(env, request, 'download', audience, incomingUrl.pathname);
       }
     }
 

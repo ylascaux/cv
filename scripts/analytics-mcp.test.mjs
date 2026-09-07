@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { analyticsConfiguration, overviewQueries, queryAnalytics, timeseriesQuery } from './analytics-mcp.mjs';
+import {
+  analyticsConfiguration,
+  geographyQuery,
+  overviewQueries,
+  queryAnalytics,
+  timeseriesQuery,
+} from './analytics-mcp.mjs';
 
 test('requires Cloudflare credentials and accepts an Analytics Engine dataset', () => {
   assert.throws(() => analyticsConfiguration({}), /CLOUDFLARE_ACCOUNT_ID/);
@@ -30,6 +36,7 @@ test('builds fixed read-only queries for the requested analytics window', () => 
   assert.match(queries.engagement, /blob1 = 'engagement'/);
   assert.match(queries.downloads, /blob1 = 'download'/);
   assert.match(timeseriesQuery('cv_traffic_production', 7), /INTERVAL '7' DAY/);
+  assert.match(geographyQuery('cv_traffic_production', 7), /blob5 AS continent, blob6 AS country/);
 });
 
 test('unwraps Cloudflare SQL API rows and sends a bearer token', async () => {

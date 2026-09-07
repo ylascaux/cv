@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { classifyTraffic, contentTypeForPath, isClientAllowed, localeForPath } from './worker.js';
+import { classifyTraffic, contentTypeForPath, geographyForRequest, isClientAllowed, localeForPath } from './worker.js';
 
 const cases = [
   ['/', 'text/html; charset=utf-8'],
@@ -52,4 +52,15 @@ test('assigns analytics events to the CV locale only', () => {
   assert.equal(localeForPath('/'), 'fr');
   assert.equal(localeForPath('/en/'), 'en');
   assert.equal(localeForPath('/downloads/yoann-lascaux-cv-fr.pdf'), 'other');
+});
+
+test('keeps only country and continent from Cloudflare geolocation data', () => {
+  assert.deepEqual(geographyForRequest({ cf: { city: 'Nantes', continent: 'EU', country: 'FR' } }), {
+    continent: 'EU',
+    country: 'FR',
+  });
+  assert.deepEqual(geographyForRequest(new Request('https://cv.example.test/')), {
+    continent: 'unknown',
+    country: 'unknown',
+  });
 });

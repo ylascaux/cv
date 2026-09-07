@@ -33,6 +33,10 @@ export function timeseriesQuery(dataset, days) {
   return `SELECT toStartOfDay(timestamp) AS day, blob1 AS event, blob2 AS audience, SUM(_sample_interval) AS count, SUM(_sample_interval * double1) AS engagement_seconds FROM ${dataset} WHERE timestamp >= NOW() - INTERVAL '${days}' DAY GROUP BY day, event, audience ORDER BY day, event, audience`;
 }
 
+export function geographyQuery(dataset, days) {
+  return `SELECT blob5 AS continent, blob6 AS country, blob2 AS audience, SUM(_sample_interval) AS visits FROM ${dataset} WHERE blob1 = 'page_view' AND timestamp >= NOW() - INTERVAL '${days}' DAY GROUP BY continent, country, audience ORDER BY visits DESC`;
+}
+
 export async function queryAnalytics({ accountId, token }, sql, fetchImpl = fetch) {
   const response = await fetchImpl(API_URL(accountId), {
     method: 'POST',
@@ -96,6 +100,24 @@ export function createAnalyticsServer(environment = process.env, fetchImpl = fet
       try {
         const configuration = analyticsConfiguration(environment);
         const rows = await queryAnalytics(configuration, timeseriesQuery(configuration.dataset, days), fetchImpl);
+        return toolResult({ days, rows });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'analytics_geography',
+    {
+      description: 'Returns page views by Cloudflare country and continent, split by human, AI, and bot.',
+      inputSchema: { days: daySchema.describe('Number of trailing days to include, from 1 to 365. Defaults to 30.') },
+      annotations: { readOnlyHint: true },
+    },
+    async ({ days }) => {
+      try {
+        const configuration = analyticsConfiguration(environment);
+        const rows = await queryAnalytics(configuration, geographyQuery(configuration.dataset, days), fetchImpl);
         return toolResult({ days, rows });
       } catch (error) {
         return toolError(error);
