@@ -11,7 +11,7 @@ Chaque environnement possède son propre dataset :
 
 ## Mesures disponibles
 
-Le Worker enregistre uniquement des valeurs agrégables. Il ne stocke ni IP, ni ville, ni coordonnées précises : le pays et le continent sont les seules zones géographiques conservées.
+Le Worker enregistre uniquement des valeurs agrégables. Il ne stocke ni IP, ni coordonnées précises. Les zones géographiques conservées sont la ville, le pays et le continent fournis par Cloudflare.
 
 | Colonne   | Valeur                                                        |
 | --------- | ------------------------------------------------------------- |
@@ -21,6 +21,7 @@ Le Worker enregistre uniquement des valeurs agrégables. Il ne stocke ni IP, ni 
 | `blob4`   | chemin public connu                                           |
 | `blob5`   | continent fourni par Cloudflare (par exemple `EU`)            |
 | `blob6`   | pays ISO fourni par Cloudflare (par exemple `FR`)             |
+| `blob7`   | ville fournie par Cloudflare (par exemple `Nantes`)           |
 | `double1` | durée d'engagement en secondes (uniquement pour `engagement`) |
 
 Une visite humaine est une consultation de page dont le user-agent ne correspond pas à une signature d'agent automatisé connue. Les IA et bots sont donc des **estimations par signature de user-agent** ; aucun user-agent, identifiant, cookie ou adresse IP n'est écrit dans le dataset. Les navigateurs qui activent Global Privacy Control ou Do Not Track ne remontent pas de durée d'engagement.
@@ -74,7 +75,7 @@ Le serveur MCP local `cv-analytics` fournit deux outils strictement en lecture s
 
 - `analytics_overview` : visites estimées humaines, IA et bots, temps humain cumulé et téléchargements ;
 - `analytics_timeseries` : série quotidienne de ces événements.
-- `analytics_geography` : visites par pays et continent, ventilées entre humain, IA et bot.
+- `analytics_geography` : visites par ville, pays et continent, ventilées entre humain, IA et bot.
 
 Il nécessite un jeton Cloudflare restreint à **Account Analytics: Read**. Définir les variables dans l'environnement de Codex, sans les écrire dans un fichier versionné :
 

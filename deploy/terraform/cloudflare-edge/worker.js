@@ -49,6 +49,7 @@ function isDownloadPath(pathname) {
 
 export function geographyForRequest(request) {
   return {
+    city: request.cf?.city ?? 'unknown',
     continent: request.cf?.continent ?? 'unknown',
     country: request.cf?.country ?? 'unknown',
   };
@@ -57,7 +58,7 @@ export function geographyForRequest(request) {
 function writeAnalytics(env, request, event, audience, pathname, seconds = 0) {
   const geography = geographyForRequest(request);
   env.CV_ANALYTICS?.writeDataPoint({
-    blobs: [event, audience, localeForPath(pathname), pathname, geography.continent, geography.country],
+    blobs: [event, audience, localeForPath(pathname), pathname, geography.continent, geography.country, geography.city],
     doubles: [seconds],
     indexes: ['cv'],
   });

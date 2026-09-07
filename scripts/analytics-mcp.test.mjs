@@ -36,7 +36,7 @@ test('builds fixed read-only queries for the requested analytics window', () => 
   assert.match(queries.engagement, /blob1 = 'engagement'/);
   assert.match(queries.downloads, /blob1 = 'download'/);
   assert.match(timeseriesQuery('cv_traffic_production', 7), /INTERVAL '7' DAY/);
-  assert.match(geographyQuery('cv_traffic_production', 7), /blob5 AS continent, blob6 AS country/);
+  assert.match(geographyQuery('cv_traffic_production', 7), /blob5 AS continent, blob6 AS country, blob7 AS city/);
 });
 
 test('unwraps Cloudflare SQL API rows and sends a bearer token', async () => {

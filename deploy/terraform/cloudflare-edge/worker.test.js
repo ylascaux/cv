@@ -54,12 +54,14 @@ test('assigns analytics events to the CV locale only', () => {
   assert.equal(localeForPath('/downloads/yoann-lascaux-cv-fr.pdf'), 'other');
 });
 
-test('keeps only country and continent from Cloudflare geolocation data', () => {
+test('keeps city, country, and continent from Cloudflare geolocation data', () => {
   assert.deepEqual(geographyForRequest({ cf: { city: 'Nantes', continent: 'EU', country: 'FR' } }), {
+    city: 'Nantes',
     continent: 'EU',
     country: 'FR',
   });
   assert.deepEqual(geographyForRequest(new Request('https://cv.example.test/')), {
+    city: 'unknown',
     continent: 'unknown',
     country: 'unknown',
   });

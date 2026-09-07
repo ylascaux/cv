@@ -34,7 +34,7 @@ export function timeseriesQuery(dataset, days) {
 }
 
 export function geographyQuery(dataset, days) {
-  return `SELECT blob5 AS continent, blob6 AS country, blob2 AS audience, SUM(_sample_interval) AS visits FROM ${dataset} WHERE blob1 = 'page_view' AND timestamp >= NOW() - INTERVAL '${days}' DAY GROUP BY continent, country, audience ORDER BY visits DESC`;
+  return `SELECT blob5 AS continent, blob6 AS country, blob7 AS city, blob2 AS audience, SUM(_sample_interval) AS visits FROM ${dataset} WHERE blob1 = 'page_view' AND timestamp >= NOW() - INTERVAL '${days}' DAY GROUP BY continent, country, city, audience ORDER BY visits DESC`;
 }
 
 export async function queryAnalytics({ accountId, token }, sql, fetchImpl = fetch) {
@@ -110,7 +110,7 @@ export function createAnalyticsServer(environment = process.env, fetchImpl = fet
   server.registerTool(
     'analytics_geography',
     {
-      description: 'Returns page views by Cloudflare country and continent, split by human, AI, and bot.',
+      description: 'Returns page views by Cloudflare city, country, and continent, split by human, AI, and bot.',
       inputSchema: { days: daySchema.describe('Number of trailing days to include, from 1 to 365. Defaults to 30.') },
       annotations: { readOnlyHint: true },
     },
