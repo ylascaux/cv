@@ -1,21 +1,21 @@
 metadata:
   locale: fr
-  lastReviewed: 2026-08-29
+  lastReviewed: 2026-09-25
 
 profile:
   name: Yoann Lascaux
-  title: Senior Platform Engineer / SRE
+  title: Lead Platform
   location: Nantes, France
   status: En poste — ouvert aux opportunités en télétravail
   driverLicense: Permis de conduire
   email: yoann-cv@lascaux.ovh
   summary: >-
-    Senior Platform Engineer / SRE avec plus de 15 ans d’expérience en infrastructure,
-    Cloud, automatisation et exploitation de systèmes critiques. Spécialisé AWS,
-    Kubernetes, Infrastructure as Code, CI/CD et observabilité, j’interviens sur
-    l’architecture et l’évolution de plateformes Cloud, leur fiabilité et la Developer
-    Experience. J’aime industrialiser les opérations, simplifier l’accès à
-    l’infrastructure et accompagner les équipes dans l’adoption de standards et d’outils
+    Lead Platform avec plus de 15 ans d’expérience en infrastructure, Cloud,
+    automatisation et exploitation de systèmes critiques. Je porte le leadership
+    technique de la plateforme chez OpenClassrooms : architecture, standards, arbitrages
+    techniques, fiabilité, observabilité et Developer Experience. Spécialisé AWS,
+    Kubernetes, Infrastructure as Code et CI/CD, j’accompagne les équipes dans
+    l’industrialisation des opérations et l’adoption de Golden Paths et de standards
     permettant de gagner en autonomie.
   links:
     - label: LinkedIn
@@ -24,12 +24,50 @@ profile:
       url: https://github.com/ylascaux
 
 experiences:
-  - id: openclassrooms
+  - id: openclassrooms-lead-platform
+    role: Lead Platform
+    organization: OpenClassrooms
+    contract: CDI
+    startDate: 2026-09
+    endDate: null
+    environment:
+      - AWS
+      - EKS
+      - Kubernetes
+      - Karpenter
+      - Terraform
+      - Terragrunt
+      - Helm
+      - GitHub Actions
+      - Datadog
+      - PostgreSQL / Aurora
+      - CloudFront
+      - Cloudflare
+      - Azure OpenAI
+      - AWS Bedrock
+      - Python
+      - Go
+      - Bash
+      - Linux
+    highlights:
+      - Leadership technique de la Platform, avec responsabilité sur l’architecture, les standards, les arbitrages techniques et l’évolution de la plateforme Cloud.
+      - Définition des priorités techniques et accompagnement des ingénieurs sur les sujets Platform, infrastructure, fiabilité et production.
+      - Pilotage des Golden Paths et capabilities internes afin de standardiser les usages et d’améliorer l’autonomie des équipes de développement.
+      - Référent technique sur AWS, EKS / Kubernetes, Karpenter, Terraform / Terragrunt, Helm, GitHub Actions et Datadog.
+      - Coordination avec la manager / RSSI sur la stratégie technique, les risques, la sécurité et les priorités de la plateforme.
+    details:
+      - Arbitrage des choix d’architecture et définition des bonnes pratiques Cloud, Kubernetes, SRE et CI/CD.
+      - Pilotage technique des évolutions Kubernetes, des runners GitHub Actions et des workflows de déploiement.
+      - Développement de l’observabilité et de l’Incident Management avec Datadog.
+      - Amélioration continue de la résilience, de la sécurité, des performances et des coûts de la plateforme.
+      - Intégration de solutions LLM et d’agents IA dans les workflows de Platform Engineering, notamment via AWS Bedrock et Azure OpenAI.
+
+  - id: openclassrooms-senior-platform-engineer
     role: Senior Platform Engineer / SRE
     organization: OpenClassrooms
     contract: CDI
     startDate: 2024-05
-    endDate: null
+    endDate: 2026-09
     environment:
       - AWS
       - EKS
@@ -57,7 +95,7 @@ experiences:
       - Définition et évolution des standards techniques de la plateforme Cloud sur AWS / EKS / Kubernetes.
       - Pilotage de sujets d’architecture et d’industrialisation autour de Terraform, Terragrunt, Helm et GitHub Actions.
       - Pilotage de l’adoption de Datadog pour unifier monitoring, APM, alerting, observabilité et gestion des incidents.
-      - Amélioration de la résilience de la plateforme via l’automatisation des sauvegardes, restaurations et scénarios de reprise après incident.
+      - Conception de Golden Paths et de capabilities Platform Engineering afin de standardiser les usages et d’améliorer l’autonomie des équipes de développement.
     details:
       - Contribution aux choix d’architecture, aux arbitrages techniques et à la définition des bonnes pratiques Cloud, Kubernetes et SRE.
       - Optimisation continue de la fiabilité, des performances et des coûts de l’infrastructure Cloud.
@@ -68,7 +106,6 @@ experiences:
       - Conception de prototypes autour de gateways LLM, MCP et agents IA pour assister l’analyse, la génération et la validation de changements d’infrastructure.
       - Expérimentation de services Azure OpenAI / AWS Bedrock, avec prise en compte de l’observabilité, de la qualité et des coûts associés.
       - Documentation des architectures, partage de connaissances et accompagnement des équipes dans l’adoption de nouveaux outils et standards.
-      - Conception de Golden Paths et de capabilities Platform Engineering afin de standardiser les usages et d’améliorer l’autonomie des équipes de développement.
 
   - id: vif
     role: Ingénieur DevOps
