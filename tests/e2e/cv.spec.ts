@@ -18,7 +18,7 @@ const pages = [
     canonical: 'https://cv.yoann-lascaux.fr/',
     alternate: 'https://cv.yoann-lascaux.fr/en/',
     seoDescription:
-      'CV de Yoann Lascaux, Senior Platform Engineer / SRE spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
+      'CV de Yoann Lascaux, Lead Platform spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
   },
   {
     path: '/en/',
@@ -36,7 +36,7 @@ const pages = [
     canonical: 'https://cv.yoann-lascaux.fr/en/',
     alternate: 'https://cv.yoann-lascaux.fr/',
     seoDescription:
-      'Resume of Yoann Lascaux, Senior Platform Engineer / SRE specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
+      'Resume of Yoann Lascaux, Lead Platform specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
   },
 ] as const;
 
@@ -78,13 +78,13 @@ for (const cv of pages) {
       'ProfilePage',
       'Person',
     ]);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Senior Platform Engineer / SRE');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Lead Platform');
     await expect(page.getByRole('heading', { name: cv.experience })).toBeVisible();
     await expect(page.getByRole('heading', { name: cv.skills })).toBeVisible();
     await expect(page.getByText(cv.currentRole, { exact: true })).toBeVisible();
-    await expect(page.locator('.company-mark')).toHaveCount(9);
+    await expect(page.locator('.company-mark')).toHaveCount(10);
     const companyLogos = page.locator('.company-mark img');
-    await expect(companyLogos).toHaveCount(9);
+    await expect(companyLogos).toHaveCount(10);
     expect(
       await companyLogos.evaluateAll((images) =>
         images.every((image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0),
@@ -92,7 +92,7 @@ for (const cv of pages) {
     ).toBe(true);
     await expect(page.locator('.skill-group-icon')).toHaveCount(8);
     const experienceDetails = page.locator('.experience-details');
-    await expect(experienceDetails).toHaveCount(8);
+    await expect(experienceDetails).toHaveCount(9);
     const firstDetails = experienceDetails.first();
     await expect(firstDetails.locator('summary')).toHaveText(cv.moreDetails);
     await expect(firstDetails).not.toHaveAttribute('open', '');

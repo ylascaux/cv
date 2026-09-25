@@ -1,21 +1,21 @@
 metadata:
   locale: en
-  lastReviewed: 2026-08-29
+  lastReviewed: 2026-09-25
 
 profile:
   name: Yoann Lascaux
-  title: Senior Platform Engineer / SRE
+  title: Lead Platform
   location: Nantes, France
   status: Employed — open to remote opportunities
   driverLicense: Driving licence
   email: yoann-cv@lascaux.ovh
   summary: >-
-    Senior Platform Engineer / SRE with over 15 years of experience in infrastructure,
-    Cloud, automation and operating critical systems. Specialized in AWS, Kubernetes,
-    Infrastructure as Code, CI/CD and observability, I work on Cloud platform architecture
-    and evolution, reliability and Developer Experience. I enjoy industrializing
-    operations, simplifying access to infrastructure and helping engineering teams adopt
-    standards and tools that enable greater autonomy.
+    Lead Platform with over 15 years of experience in infrastructure, Cloud, automation
+    and operating critical systems. I provide technical leadership for the Platform at
+    OpenClassrooms, covering architecture, standards, technical trade-offs, reliability,
+    observability and Developer Experience. Specialized in AWS, Kubernetes, Infrastructure
+    as Code and CI/CD, I help teams industrialize operations and adopt Golden Paths and
+    standards that increase developer autonomy.
   links:
     - label: LinkedIn
       url: https://www.linkedin.com/in/yoann-lascaux/
@@ -23,12 +23,50 @@ profile:
       url: https://github.com/ylascaux
 
 experiences:
-  - id: openclassrooms
+  - id: openclassrooms-lead-platform
+    role: Lead Platform
+    organization: OpenClassrooms
+    contract: Full-time
+    startDate: 2026-09
+    endDate: null
+    environment:
+      - AWS
+      - EKS
+      - Kubernetes
+      - Karpenter
+      - Terraform
+      - Terragrunt
+      - Helm
+      - GitHub Actions
+      - Datadog
+      - PostgreSQL / Aurora
+      - CloudFront
+      - Cloudflare
+      - Azure OpenAI
+      - AWS Bedrock
+      - Python
+      - Go
+      - Bash
+      - Linux
+    highlights:
+      - Technical leadership of the Platform, with responsibility for architecture, standards, technical trade-offs and Cloud platform evolution.
+      - Define technical priorities and support engineers on Platform, infrastructure, reliability and production topics.
+      - Lead Golden Paths and internal capabilities to standardize usage patterns and increase developer autonomy.
+      - Technical reference for AWS, EKS / Kubernetes, Karpenter, Terraform / Terragrunt, Helm, GitHub Actions and Datadog.
+      - Coordinate with the manager / CISO on technical strategy, risks, security and platform priorities.
+    details:
+      - Drive architecture decisions and define Cloud, Kubernetes, SRE and CI/CD best practices.
+      - Lead Kubernetes evolution, GitHub Actions runners and deployment workflow improvements.
+      - Expand observability and Incident Management with Datadog.
+      - Continuously improve platform resilience, security, performance and costs.
+      - Integrate LLM and AI-agent solutions into Platform Engineering workflows, including AWS Bedrock and Azure OpenAI.
+
+  - id: openclassrooms-senior-platform-engineer
     role: Senior Platform Engineer / SRE
     organization: OpenClassrooms
     contract: Full-time
     startDate: 2024-05
-    endDate: null
+    endDate: 2026-09
     environment:
       - AWS
       - EKS
@@ -52,22 +90,21 @@ experiences:
       - Bash
       - Linux
     highlights:
-      - Design and evolution of OpenClassrooms’ Cloud platform, with a cross-functional role covering architecture, industrialization, reliability, observability and Developer Experience.
-      - Define and evolve technical standards for the AWS / EKS / Kubernetes platform.
-      - Lead architecture and industrialization initiatives around Terraform, Terragrunt, Helm and GitHub Actions.
-      - Lead the adoption of Datadog to unify monitoring, APM, alerting, observability and incident management.
-      - Improve platform resilience through automated backups, restores and disaster recovery scenarios.
+      - Designed and evolved OpenClassrooms’ Cloud platform, with a cross-functional role covering architecture, industrialization, reliability, observability and Developer Experience.
+      - Defined and evolved technical standards for the AWS / EKS / Kubernetes platform.
+      - Led architecture and industrialization initiatives around Terraform, Terragrunt, Helm and GitHub Actions.
+      - Led the adoption of Datadog to unify monitoring, APM, alerting, observability and incident management.
+      - Designed Golden Paths and Platform Engineering capabilities to standardize usage patterns and increase developer autonomy.
     details:
-      - Contribute to architecture decisions, technical trade-offs and Cloud, Kubernetes and SRE best practices.
-      - Continuously optimize Cloud infrastructure reliability, performance and costs.
-      - Industrialize infrastructure operations to reduce manual tasks and improve environment reproducibility.
-      - Support development teams on infrastructure, observability, CI/CD and production best practices.
-      - Contribute to the evolution of CI/CD runners and Kubernetes deployment workflows.
-      - Integrate LLM and generative AI solutions into Platform Engineering workflows.
-      - Design prototypes using LLM gateways, MCP and AI agents to assist with infrastructure analysis, generation and validation.
-      - Experiment with Azure OpenAI and AWS Bedrock, including observability, quality and cost considerations.
-      - Document architectures, share knowledge and support teams in adopting new tools and standards.
-      - Design Golden Paths and Platform Engineering capabilities to standardize usage patterns and increase developer autonomy.
+      - Contributed to architecture decisions, technical trade-offs and Cloud, Kubernetes and SRE best practices.
+      - Continuously optimized Cloud infrastructure reliability, performance and costs.
+      - Industrialized infrastructure operations to reduce manual tasks and improve environment reproducibility.
+      - Supported development teams on infrastructure, observability, CI/CD and production best practices.
+      - Contributed to the evolution of CI/CD runners and Kubernetes deployment workflows.
+      - Integrated LLM and generative AI solutions into Platform Engineering workflows.
+      - Designed prototypes using LLM gateways, MCP and AI agents to assist with infrastructure analysis, generation and validation.
+      - Experimented with Azure OpenAI and AWS Bedrock, including observability, quality and cost considerations.
+      - Documented architectures, shared knowledge and supported teams in adopting new tools and standards.
 
   - id: vif
     role: DevOps Engineer

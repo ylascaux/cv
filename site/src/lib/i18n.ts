@@ -25,8 +25,8 @@ export const translations = {
     enableDarkTheme: 'Activer le thème sombre',
     enableLightTheme: 'Activer le thème clair',
     seoDescription:
-      'CV de Yoann Lascaux, Senior Platform Engineer / SRE spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
-    socialImageAlt: 'Yoann Lascaux — Senior Platform Engineer / SRE',
+      'CV de Yoann Lascaux, Lead Platform spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
+    socialImageAlt: 'Yoann Lascaux — Lead Platform',
   },
   en: {
     skip: 'Skip to content',
@@ -52,8 +52,8 @@ export const translations = {
     enableDarkTheme: 'Enable dark theme',
     enableLightTheme: 'Enable light theme',
     seoDescription:
-      'Resume of Yoann Lascaux, Senior Platform Engineer / SRE specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
-    socialImageAlt: 'Yoann Lascaux — Senior Platform Engineer / SRE',
+      'Resume of Yoann Lascaux, Lead Platform specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
+    socialImageAlt: 'Yoann Lascaux — Lead Platform',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
