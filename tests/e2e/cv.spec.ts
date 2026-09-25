@@ -18,7 +18,7 @@ const pages = [
     canonical: 'https://cv.yoann-lascaux.fr/',
     alternate: 'https://cv.yoann-lascaux.fr/en/',
     seoDescription:
-      'CV de Yoann Lascaux, Senior Platform Engineer / SRE spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
+      'CV de Yoann Lascaux, Lead Platform spécialisé en AWS, Kubernetes, Terraform, CI/CD, observabilité et plateformes Cloud.',
   },
   {
     path: '/en/',
@@ -36,7 +36,7 @@ const pages = [
     canonical: 'https://cv.yoann-lascaux.fr/en/',
     alternate: 'https://cv.yoann-lascaux.fr/',
     seoDescription:
-      'Resume of Yoann Lascaux, Senior Platform Engineer / SRE specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
+      'Resume of Yoann Lascaux, Lead Platform specializing in AWS, Kubernetes, Terraform, CI/CD, observability and Cloud platforms.',
   },
 ] as const;
 
@@ -78,7 +78,7 @@ for (const cv of pages) {
       'ProfilePage',
       'Person',
     ]);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Senior Platform Engineer / SRE');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Lead Platform');
     await expect(page.getByRole('heading', { name: cv.experience })).toBeVisible();
     await expect(page.getByRole('heading', { name: cv.skills })).toBeVisible();
     await expect(page.getByText(cv.currentRole, { exact: true })).toBeVisible();
